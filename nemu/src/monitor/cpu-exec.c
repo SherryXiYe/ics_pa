@@ -12,7 +12,7 @@ int nemu_state = NEMU_STOP;
 
 void exec_wrapper(bool);
 
-/* Simulate how the CPU works. */
+/* Simulate how the CPU works. 模拟CPU的工作方式：不断执行指令 */
 void cpu_exec(uint64_t n) {
   if (nemu_state == NEMU_END) {
     printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
@@ -20,12 +20,12 @@ void cpu_exec(uint64_t n) {
   }
   nemu_state = NEMU_RUNNING;
 
-  bool print_flag = n < MAX_INSTR_TO_PRINT;
+  bool print_flag = n < MAX_INSTR_TO_PRINT;     //程序的指令数小于MAX_INSTR_TO_PRIN时才能打印
 
   for (; n > 0; n --) {
     /* Execute one instruction, including instruction fetch,
      * instruction decode, and the actual execution. */
-    exec_wrapper(print_flag);
+    exec_wrapper(print_flag);         // 让CPU执行当前 %eip 指向的一条指令，然后更新%eip。 in nemu/src/cpu/exec/exec.c
 
 #ifdef DEBUG
     /* TODO: check watchpoints here. */

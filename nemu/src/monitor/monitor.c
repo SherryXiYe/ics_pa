@@ -51,10 +51,11 @@ static inline int load_default_img() {
   return sizeof(img);
 }
 
+// 读入带有客户程序的镜像文件（让 monitor 直接把客户镜像程序 guest prog 读入到一个固定的内存位置0x100000）
 static inline void load_img() {
   long size;
   if (img_file == NULL) {
-    size = load_default_img();
+    size = load_default_img();      //缺省 guest prog 时用默认用上述mov程序
   }
   else {
     int ret;
@@ -79,9 +80,10 @@ static inline void load_img() {
 #endif
 }
 
+// 模拟计算机启动，进行一些和“计算机启动”相关的初始化工作
 static inline void restart() {
   /* Set the initial instruction pointer. */
-  cpu.eip = ENTRY_START;
+  cpu.eip = ENTRY_START;        //将 %eip 的处置设置为约定的起始内存位置0x100000
 
 #ifdef DIFF_TEST
   init_qemu_reg();
@@ -122,10 +124,10 @@ int init_monitor(int argc, char *argv[]) {
 #endif
 
   /* Load the image to memory. */
-  load_img();
+  load_img();           // 读入带有客户程序的镜像文件  in nemu/src/monitor/monitor.c
 
   /* Initialize this virtual computer system. */
-  restart();
+  restart();            // 模拟计算机启动，进行一些和“计算机启动”相关的初始化工作。in nemu/src/monitor/monitor.c
 
   /* Compile the regular expressions. */
   init_regex();

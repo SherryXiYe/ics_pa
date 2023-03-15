@@ -27,8 +27,9 @@ char* rl_gets() {
   return line_read;
 }
 
-static int cmd_c(char *args) {
-  cpu_exec(-1);
+// 输入c之后，NEMU开始进入指令执行的主循环cpu_exec()
+static int cmd_c(char *args) {    
+  cpu_exec(-1);     // in nemu/src/monitor/cpu-exec.c
   return 0;
 }
 
@@ -51,21 +52,22 @@ static struct {
 
 };
 
+// NR_CMD:命令数
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
 
 static int cmd_help(char *args) {
   /* extract the first argument */
-  char *arg = strtok(NULL, " ");
+  char *arg = strtok(NULL, " ");          //读取第一个参数
   int i;
 
   if (arg == NULL) {
-    /* no argument given */
+    /* no argument given  输出全部命令及其描述 */
     for (i = 0; i < NR_CMD; i ++) {
       printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
     }
   }
   else {
-    for (i = 0; i < NR_CMD; i ++) {
+    for (i = 0; i < NR_CMD; i ++) {       // 查找参数对应的命令及其描述，并输出 
       if (strcmp(arg, cmd_table[i].name) == 0) {
         printf("%s - %s\n", cmd_table[i].name, cmd_table[i].description);
         return 0;
@@ -76,6 +78,7 @@ static int cmd_help(char *args) {
   return 0;
 }
 
+// 进入用户界面主循环，输出NEMU的命令提示符:(nemu)。
 void ui_mainloop(int is_batch_mode) {
   if (is_batch_mode) {
     cmd_c(NULL);
@@ -105,8 +108,8 @@ void ui_mainloop(int is_batch_mode) {
 
     int i;
     for (i = 0; i < NR_CMD; i ++) {
-      if (strcmp(cmd, cmd_table[i].name) == 0) {
-        if (cmd_table[i].handler(args) < 0) { return; }
+      if (strcmp(cmd, cmd_table[i].name) == 0) {        // 查找对应的命令，并传入参数
+        if (cmd_table[i].handler(args) < 0) { return; }       // cmd_q返回-1，小于0退出
         break;
       }
     }
