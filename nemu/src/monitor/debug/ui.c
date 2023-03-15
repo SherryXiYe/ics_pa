@@ -38,8 +38,8 @@ static int cmd_q(char *args) {
 }
 
 static int cmd_help(char *args);
-
 static int cmd_si(char *args);
+static int cmd_info(char *args);
 
 static struct {
   char *name;
@@ -50,6 +50,7 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Single-step execution. Pause execution after N instructions are executed in one step.", cmd_si },
+  { "info", "Print program status.", cmd_info },
   /* TODO: Add more commands */
 
 };
@@ -88,6 +89,19 @@ static int cmd_si(char *args){
   }
   cpu_exec(N);
   return 0;
+}
+
+static int cmd_info(char *args){
+  char *arg = strtok(NULL, " "); 
+  if(strcmp(arg,"r") == 0){     // info r:打印寄存器状态
+    for(int i=0;i<8;i++){
+      printf("%s\t%x\t%u\n",reg_name(i,4),reg_l(i),reg_l(i));
+    }
+  }else if(strcmp(arg,"w") == 0){
+
+  }else{
+    printf("Bad command parameter. Please re-enter.\n");
+  }
 }
 
 // 进入用户界面主循环，输出NEMU的命令提示符:(nemu)。

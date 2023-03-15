@@ -43,14 +43,18 @@ static inline int check_reg_index(int index) {
   return index;
 }
 
-#define reg_l(index) (cpu.gpr[check_reg_index(index)]._32)
-#define reg_w(index) (cpu.gpr[check_reg_index(index)]._16)
+#define reg_l(index) (cpu.gpr[check_reg_index(index)]._32)    // 8个32位寄存器
+#define reg_w(index) (cpu.gpr[check_reg_index(index)]._16)    // 8个16位寄存器
 #define reg_b(index) (cpu.gpr[check_reg_index(index) & 0x3]._8[index >> 2])
+/*
+只有AL,DL,CL,BL,AH,DH,CH,BH 8个8位寄存器，应该是：依次的index为0~7，&0x3分别为0，1，2，3，0，1，2，3；index>>2分别为0，0，0，0，1，1，1，1
+*/
 
-extern const char* regsl[];
-extern const char* regsw[];
-extern const char* regsb[];
+extern const char* regsl[];   // 8个32位寄存器的名字的数组
+extern const char* regsw[];   // 8个16位寄存器的名字的数组
+extern const char* regsb[];   // 8个8位寄存器的名字的数组
 
+// index为寄存器编号，width为寄存器的字节数。返回寄存器的名字
 static inline const char* reg_name(int index, int width) {
   assert(index >= 0 && index < 8);
   switch (width) {
