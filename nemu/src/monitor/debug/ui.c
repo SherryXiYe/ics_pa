@@ -39,6 +39,8 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args);
+
 static struct {
   char *name;
   char *description;
@@ -47,7 +49,7 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  { "si", "Single-step execution. Pause execution after N instructions are executed in one step.", cmd_si },
   /* TODO: Add more commands */
 
 };
@@ -75,6 +77,16 @@ static int cmd_help(char *args) {
     }
     printf("Unknown command '%s'\n", arg);
   }
+  return 0;
+}
+
+static int cmd_si(char *args){
+  char *arg = strtok(NULL, " ");          //读取第一个参数
+  uint64_t N = 1;        // N缺省为1，默认单步执行一条指令 
+  if (arg != NULL) {
+    sscanf(arg,"%d",&N);
+  }
+  cpu_exec(N);
   return 0;
 }
 

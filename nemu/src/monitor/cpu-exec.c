@@ -14,7 +14,7 @@ void exec_wrapper(bool);
 
 /* Simulate how the CPU works. 模拟CPU的工作方式：不断执行指令 */
 void cpu_exec(uint64_t n) {
-  if (nemu_state == NEMU_END) {
+  if (nemu_state == NEMU_END) {   // 因此,再次运行程序需要输入q后重新运行NEMU
     printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
     return;
   }
@@ -41,5 +41,5 @@ void cpu_exec(uint64_t n) {
   }
 
   if (nemu_state == NEMU_RUNNING) { nemu_state = NEMU_STOP; }
-  //此处，一个客户程序运行完后，nemu_state 会变为 NEMU_STOP。因此，为了再次运行程序，需要输入q后重新运行NEMU
+  //此处，一个客户程序运行完后，nemu_state 会变为 NEMU_STOP。
 }

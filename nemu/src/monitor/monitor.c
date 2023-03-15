@@ -29,8 +29,6 @@ static inline void welcome() {
   printf("Welcome to NEMU!\n");
   Log("Build time: %s, %s", __TIME__, __DATE__);
   printf("For help, type \"help\"\n");
-
-  panic("test panic");
 }
 
 static inline int load_default_img() {
@@ -49,7 +47,7 @@ static inline int load_default_img() {
 
   Log("No image is given. Use the default build-in image.");
 
-  memcpy(guest_to_host(ENTRY_START), img, sizeof(img));
+  memcpy(guest_to_host(ENTRY_START), img, sizeof(img));   // 把img复制到起始位置0x100000
 
   return sizeof(img);
 }
