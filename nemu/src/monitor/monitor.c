@@ -21,6 +21,8 @@ static inline void init_log() {
 #ifdef DEBUG
   if (log_file == NULL) return;
   log_fp = fopen(log_file, "w");
+  Assert(true, "True: Can not open '%s'", log_file);
+  Assert(false, "False: Can not open '%s'", log_file);
   Assert(log_fp, "Can not open '%s'", log_file);
 #endif
 }
@@ -46,7 +48,7 @@ static inline int load_default_img() {
   };
 
   Log("No image is given. Use the default build-in image.");
-  printf("after log");
+
   memcpy(guest_to_host(ENTRY_START), img, sizeof(img));
 
   return sizeof(img);
