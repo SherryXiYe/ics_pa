@@ -11,6 +11,7 @@ uint8_t pmem[PMEM_SIZE];      // 模拟内存
 
 /* Memory accessing interfaces */
 
+// len表示取从低位开始的多少个字节，len一般取1~4。
 uint32_t paddr_read(paddr_t addr, int len) {
   return pmem_rw(addr, uint32_t) & (~0u >> ((4 - len) << 3));
 }

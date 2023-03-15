@@ -40,6 +40,7 @@ static int cmd_q(char *args) {
 static int cmd_help(char *args);
 static int cmd_si(char *args);
 static int cmd_info(char *args);
+static int cmd_x(char *args);
 
 static struct {
   char *name;
@@ -51,6 +52,8 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "Single-step execution. Pause execution after N instructions are executed in one step.", cmd_si },
   { "info", "Print program status.", cmd_info },
+  { "x","Scan memory. Take the value of the expression (the second parameter) as the starting memory address, and output consecutive N (the first parameter) 4 bytes in hexadecimal format.", cmd_x},
+
   /* TODO: Add more commands */
 
 };
@@ -95,13 +98,28 @@ static int cmd_info(char *args){
   char *arg = strtok(NULL, " "); 
   if(strcmp(arg,"r") == 0){     // info r:打印寄存器状态
     for(int i=0;i<8;i++){
-      printf("%s\t%8x\t%u\n",reg_name(i,4),reg_l(i),reg_l(i));
+      printf("%s\t%08x\t%u\n",reg_name(i,4),reg_l(i),reg_l(i));
     }
-  }else if(strcmp(arg,"w") == 0){
+  }else if(strcmp(arg,"w") == 0){   // info w：打印监视点信息
 
   }else{
     printf("Bad command parameter. Please re-enter.\n");
   }
+}
+
+static int cmd_x(char *args){     // x N EXPR
+  char *arg1 = strtok(NULL, " "); 
+  int N;
+  sscanf(arg1,"%d",&N);
+  char *arg2 = strtok(NULL, " ");      // 第二个参数
+  uint32_t addr;
+  sscanf(arg2,"%x",&addr);
+  for(int i=0;i<N;i++){
+    printf("%08x  ",paddr_read(addr,4));
+    addr+=4;
+  }
+  printf("\n");
+  return 0;
 }
 
 // 进入用户界面主循环，输出NEMU的命令提示符:(nemu)。
