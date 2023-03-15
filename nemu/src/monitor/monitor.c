@@ -114,7 +114,7 @@ int init_monitor(int argc, char *argv[]) {
   init_log();
 
   /* Test the implementation of the `CPU_state' structure. */
-  reg_test();
+  reg_test();           //生成一些随机的数据，对寄存器实现的正确性进行测试  in nemu/src/cpu/reg.c
 
 #ifdef DIFF_TEST
   /* Fork a child process to perform differential testing. */

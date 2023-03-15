@@ -8,6 +8,7 @@ const char *regsl[] = {"eax", "ecx", "edx", "ebx", "esp", "ebp", "esi", "edi"};
 const char *regsw[] = {"ax", "cx", "dx", "bx", "sp", "bp", "si", "di"};
 const char *regsb[] = {"al", "cl", "dl", "bl", "ah", "ch", "dh", "bh"};
 
+//生成一些随机的数据，对寄存器实现的正确性进行测试
 void reg_test() {
   srand(time(0));
   uint32_t sample[8];

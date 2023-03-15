@@ -1,7 +1,5 @@
 # NEMU
 
-test
-
 NEMU(NJU Emulator) is a simple but complete full-system x86 emulator designed for teaching purpose.
 Small x86 programs can run under NEMU.
 
