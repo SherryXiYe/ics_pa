@@ -21,8 +21,6 @@ static inline void init_log() {
 #ifdef DEBUG
   if (log_file == NULL) return;
   log_fp = fopen(log_file, "w");
-  Assert(true, "True: Can not open '%s'", log_file);
-  Assert(false, "False: Can not open '%s'", log_file);
   Assert(log_fp, "Can not open '%s'", log_file);
 #endif
 }
