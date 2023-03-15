@@ -95,7 +95,7 @@ static int cmd_info(char *args){
   char *arg = strtok(NULL, " "); 
   if(strcmp(arg,"r") == 0){     // info r:打印寄存器状态
     for(int i=0;i<8;i++){
-      printf("%s\t%08x\t%u\n",reg_name(i,4),reg_l(i),reg_l(i));
+      printf("%s\t%8x\t%u\n",reg_name(i,4),reg_l(i),reg_l(i));
     }
   }else if(strcmp(arg,"w") == 0){
 
