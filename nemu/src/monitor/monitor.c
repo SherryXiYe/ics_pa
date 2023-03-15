@@ -41,7 +41,8 @@ static inline int load_default_img() {
     0x66, 0xc7, 0x84, 0x99, 0x00, 0xe0,  // 100017:  movw  $0x1,-0x2000(%ecx,%ebx,4)
     0xff, 0xff, 0x01, 0x00,
     0xb8, 0x00, 0x00, 0x00, 0x00,        // 100021:  movl  $0x0,%eax
-    0xd6,                                // 100026:  nemu_trap
+    0xd6,                                // 100026:  nemu_trap   
+                                         // nemu_trap：NEMU中为了让客户程序指示执行的结束而加入的指令，机器码为0xd6
   };
 
   Log("No image is given. Use the default build-in image.");
