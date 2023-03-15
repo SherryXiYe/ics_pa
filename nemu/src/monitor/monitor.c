@@ -46,7 +46,7 @@ static inline int load_default_img() {
   };
 
   Log("No image is given. Use the default build-in image.");
-
+  printf("after log");
   memcpy(guest_to_host(ENTRY_START), img, sizeof(img));
 
   return sizeof(img);

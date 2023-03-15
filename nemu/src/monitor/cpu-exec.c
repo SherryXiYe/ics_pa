@@ -41,4 +41,5 @@ void cpu_exec(uint64_t n) {
   }
 
   if (nemu_state == NEMU_RUNNING) { nemu_state = NEMU_STOP; }
+  //此处，一个客户程序运行完后，nemu_state 会变为 NEMU_STOP。因此，为了再次运行程序，需要输入q后重新运行NEMU
 }
