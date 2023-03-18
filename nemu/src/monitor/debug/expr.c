@@ -271,7 +271,7 @@ uint32_t eval(int p, int q, bool *success){
   }else{
     int dominant_op = dominant_op_pos(p,q);
     if(dominant_op==q){
-      Log("Bad dominant operator.\n");
+      Log("Bad dominant operator. index: %d , type: %d\n",dominant_op,tokens[dominant_op].type);
       *success = false;
       return 0;
     }
