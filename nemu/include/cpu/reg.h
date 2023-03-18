@@ -66,35 +66,28 @@ static inline const char* reg_name(int index, int width) {
 }
 
 static inline bool get_reg_value(char* reg_name, uint32_t* value){
-  printf("in reg search\n");
   if(strcmp(reg_name,"eip")==0){
     *value = cpu.eip;
     return true;
   }
-  printf("reg search 1\n");
   for(int i=0;i<8;i++){
-    printf("a\n");
-    if(strcmp(reg_name,"eax"==0)){
+    if(strcmp(reg_name,regsl[i])==0){
       *value = reg_l(i);
-      printf("reg search finish 1\n");
       return true;
     }
   }
-  printf("reg search 2\n");
   for(int i=0;i<8;i++){
-    if(strcmp(reg_name,regsw[i]==0)){
+    if(strcmp(reg_name,regsw[i])==0){
       *value = reg_w(i);
       return true;
     }
   }
-  printf("reg search 3\n");
   for(int i=0;i<8;i++){
-    if(strcmp(reg_name,regsb[i]==0)){
+    if(strcmp(reg_name,regsb[i])==0){
       *value = reg_b(i);
       return true;
     }
   }
-  printf("reg search finish\n");
   return false;
 }
 
