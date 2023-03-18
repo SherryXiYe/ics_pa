@@ -65,7 +65,7 @@ static inline const char* reg_name(int index, int width) {
   }
 }
 
-bool get_reg_value(char* reg_name, uint32_t* value){
+static inline bool get_reg_value(char* reg_name, uint32_t* value){
   if(strcmp(reg_name,"eip")==0){
     *value = cpu.eip;
     return true;
