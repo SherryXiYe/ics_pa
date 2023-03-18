@@ -268,7 +268,7 @@ uint32_t eval(int p, int q, bool *success){
       }
     }
   }else if(check_parentheses(p,q,success)==true){
-    return eval(p+1,q+1,success);
+    return eval(p+1,q-1,success);
   }else{
     int dominant_op = dominant_op_pos(p,q);
     if(dominant_op==q){
