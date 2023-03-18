@@ -5,7 +5,6 @@
  */
 #include <sys/types.h>
 #include <regex.h>
-#include <string.h>
 
 enum {
   TK_NOTYPE = 0, 
@@ -130,7 +129,11 @@ static bool make_token(char *e) {
           case TK_REG:
             strncpy(tokens[nr_token].str,substr_start+1,substr_len-1);    //去掉$
             tokens[nr_token].str[substr_len-1] = '\0';
-            strlwr(tokens[nr_token].str);                 //统一为小写字母
+            char* p = tokens[nr_token].str;                 //统一为小写字母
+            while (*p){
+              *p = tolower((unsigned char)*p);
+              p++;
+            }
             tokens[nr_token].precedence = OP_LV0;
             break;
           case TK_LBRACKET:
