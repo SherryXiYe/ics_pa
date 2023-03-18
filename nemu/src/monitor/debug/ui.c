@@ -41,6 +41,7 @@ static int cmd_help(char *args);
 static int cmd_si(char *args);
 static int cmd_info(char *args);
 static int cmd_x(char *args);
+static int cmd_p(char *args);
 
 static struct {
   char *name;
@@ -52,8 +53,8 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "Single-step execution. Pause execution after N instructions are executed in one step.", cmd_si },
   { "info", "Print program status.", cmd_info },
-  { "x","Scan memory. Take the value of the expression (the second parameter) as the starting memory address, and output consecutive N (the first parameter) 4 bytes in hexadecimal format.", cmd_x},
-
+  { "x", "Scan memory. Take the value of the expression (the second parameter) as the starting memory address, and output consecutive N (the first parameter) 4 bytes in hexadecimal format.", cmd_x},
+  { "p", "Expression evaluation.", cmd_p},
   /* TODO: Add more commands */
 
 };
@@ -124,6 +125,18 @@ static int cmd_x(char *args){     // x N EXPR
     addr+=4;
   }
   printf("\n");
+  return 0;
+}
+
+static int cmd_p(char *args){
+  char *expr_arg = strtok(NULL, " "); 
+  bool success = true;
+  uint32_t result = expr(expr_arg, &success);
+  if(!success){
+    printf("Wrong expression. Please re-enter.\n");
+  }else{
+    printf("%u\n",result);
+  }
   return 0;
 }
 
