@@ -7,10 +7,27 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ
-
+  TK_NOTYPE = 0, 
+  TK_NUM , TK_HEX, TK_REG,
+  TK_LBRACKET , TK_RBRACKET,
+  TK_MINUS , TK_DEREF,
+  TK_EQ, TK_NOTEQ, TK_ADD, TK_SUB, TK_MUL, TK_DIV,
+  TK_AND, TK_OR, TK_NOT,
   /* TODO: Add more token types */
 
+};
+
+enum {
+  OP_LV0=0, //number,register
+  OP_LV1=10, //()
+  OP_LV2_1=21, //unary+,unary-
+  OP_LV2_2=22, //deference*
+  OP_LV3=30, //*,/,%
+  OP_LV4=40, //+,-
+  OP_LV6=60, //!
+  OP_LV7=70, //==, !=
+  OP_LV11=110, //&&
+  OP_LV12=120, //||
 };
 
 static struct rule {
@@ -23,8 +40,20 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
-  {"==", TK_EQ}         // equal
+  {"\\+", TK_ADD},         // plus
+  {"-", TK_SUB},
+  {"\\*", TK_MUL},
+  {"\\/", TK_DIV},
+  {"\\(", TK_LBRACKET},
+  {"\\)", TK_RBRACKET},
+  {"0[xX][0-9A-Fa-f]+", TK_HEX},
+  {"[1-9][0-9]*|0", TK_NUM},
+  {"\\$[eE]?[a-zA-Z]{2}", TK_REG},
+  {"==", TK_EQ},         // equal
+  {"!=",TK_NOTEQ},
+  {"&&",TK_AND},
+  {"\\|\\|",TK_OR},
+  {"!",TK_NOT},
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -51,6 +80,7 @@ void init_regex() {
 typedef struct token {
   int type;
   char str[32];
+  int precedence;
 } Token;
 
 Token tokens[32];
@@ -78,11 +108,76 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
-
+        if(rules[i].token_type == TK_NOTYPE){
+          break;
+        }
+        if(substr_len>29){
+          panic("tokens array's str buffer overflow");
+        }
+        tokens[nr_token].type = rules[i].token_type;
         switch (rules[i].token_type) {
+          case TK_NUM:
+            strncpy(tokens[nr_token].str,substr_start,substr_len);
+            tokens[nr_token].str[substr_len] = '\0';
+            tokens[nr_token].precedence = OP_LV0;
+            break;
+          case TK_HEX:
+            strncpy(tokens[nr_token].str,substr_start+2,substr_len-2);    //去掉0x
+            tokens[nr_token].str[substr_len-2] = '\0';
+            tokens[nr_token].precedence = OP_LV0;
+            break;
+          case TK_REG:
+            strncpy(tokens[nr_token].str,substr_start+1,substr_len-1);    //去掉$
+            tokens[nr_token].str[substr_len-1] = '\0';
+            tokens[nr_token].precedence = OP_LV0;
+            break;
+          case TK_LBRACKET:
+          case TK_RBRACKET:
+            tokens[nr_token].precedence = OP_LV1;
+            break;
+          case TK_ADD:
+            // 前一个token是NUM、HEX、REG、）的是双目加；前一个token是 &&、||、！、==、!=、+、-、*、/、（ 的是单目加
+            if(nr_token==0 || !(tokens[nr_token-1].type == TK_NUM || tokens[nr_token].type == TK_HEX || tokens[nr_token].type == TK_REG || tokens[nr_token].type == TK_RBRACKET )){
+              tokens[nr_token].precedence = OP_LV2_1; 
+            }else{
+              tokens[nr_token].precedence = OP_LV4;
+            }
+            break;
+          case TK_SUB:
+            if(nr_token==0 || !(tokens[nr_token-1].type == TK_NUM || tokens[nr_token].type == TK_HEX || tokens[nr_token].type == TK_REG || tokens[nr_token].type == TK_RBRACKET )){
+              tokens[nr_token].precedence = OP_LV2_1; 
+              tokens[nr_token].type = TK_MINUS;
+            }else{
+              tokens[nr_token].precedence = OP_LV4;
+            }
+            break;
+          case TK_DIV:
+            tokens[nr_token].precedence = OP_LV3;
+            break;
+          case TK_MUL:
+            if(nr_token==0 || !(tokens[nr_token-1].type == TK_NUM || tokens[nr_token].type == TK_HEX || tokens[nr_token].type == TK_REG || tokens[nr_token].type == TK_RBRACKET )){
+              tokens[nr_token].precedence = OP_LV2_2; 
+              tokens[nr_token].type = TK_DEREF;
+            }else{
+              tokens[nr_token].precedence = OP_LV3;
+            }
+            break;
+          case TK_NOT:
+            tokens[nr_token].precedence = OP_LV6;
+            break;
+          case TK_EQ:
+          case TK_NOTEQ:
+            tokens[nr_token].precedence = OP_LV7;
+            break;
+          case TK_AND:
+            tokens[nr_token].precedence = OP_LV11;
+            break;
+          case TK_OR:
+            tokens[nr_token].precedence = OP_LV12;
+            break;
           default: TODO();
         }
-
+        nr_token++;
         break;
       }
     }
@@ -96,6 +191,64 @@ static bool make_token(char *e) {
   return true;
 }
 
+bool check_parentheses(int p, int q, bool *success){
+  int count =0;
+  int first_rbracket = -1;
+  bool isFirst=true;
+  for(int i=p;i<=q;i++){
+    if(tokens[i].type==TK_LBRACKET){
+      count++;
+    }else if(tokens[i].type == TK_RBRACKET){
+      count--;
+      if(isFirst){
+        first_rbracket = i;
+        isFirst = false;
+      }
+    }
+    if(count<0)
+      break;
+  }
+  if(count!=0){
+    success = false;
+    return false;
+  }
+  if(tokens[p].type!=TK_LBRACKET || first_rbracket != q){
+    return false;
+  }else{
+    return true;
+  }
+} 
+
+uint32_t eval(int p, int q, bool *success){
+  if(p>q){
+    Log("Bad expression.\n");
+    success = false;
+    return 0;
+  }else if(p==q){
+    if(tokens[p].type == TK_NUM){
+      uint32_t value;
+      sscanf(tokens[p].str,"%d",&value);
+      return value;
+    }else if(tokens[p].type == TK_HEX){
+      uint32_t value;
+      sscanf(tokens[p].str,"%x",&value);
+      return value;
+    }else if(tokens[p].type == TK_REG){
+      uint32_t value;
+      if(get_reg_value(tokens[p].str,&value)){
+        return value;
+      }else{
+        Log("Register name that does not exist.\n");
+        success = false;
+      }
+    }
+  }else if(check_parentheses(p,q)==true){
+    return eval(p+1,q+1);
+  }else{
+    if(!success)
+  }
+}
+
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
@@ -103,7 +256,6 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
-
-  return 0;
+  
+  return eval(0,nr_token-1,success);
 }

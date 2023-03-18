@@ -65,4 +65,27 @@ static inline const char* reg_name(int index, int width) {
   }
 }
 
+bool get_reg_value(char* reg_name, uint32_t* value){
+  if(strcmp(reg_name,"eip")==0){
+    value = cpu.eip;
+    return true;
+  }
+  for(int i=0;i<8;i++){
+    if(strcmp(reg_name,regsl[i]==0))
+      value = reg_l(i);
+      return true;
+  }
+  for(int i=0;i<8;i++){
+    if(strcmp(reg_name,regsw[i]==0))
+      value = reg_w(i);
+      return true;
+  }
+  for(int i=0;i<8;i++){
+    if(strcmp(reg_name,regsb[i]==0))
+      value = reg_b(i);
+      return true;
+  }
+  return false;
+}
+
 #endif
