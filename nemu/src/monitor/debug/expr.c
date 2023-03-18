@@ -375,10 +375,10 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-  for(int i=0;i<nr_token;i++){
-    printf("i:%d, type:%s, pre:%d\n",i,type_name(tokens[i].type),tokens[i].precedence);
-  }
+  // for(int i=0;i<nr_token;i++){
+  //   printf("i:%d, type:%s, pre:%d\n",i,type_name(tokens[i].type),tokens[i].precedence);
+  // }
+
   /* TODO: Insert codes to evaluate the expression. */
-  
   return eval(0,nr_token-1,success);
 }
