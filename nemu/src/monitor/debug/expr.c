@@ -10,9 +10,14 @@ enum {
   TK_NOTYPE = 0, 
   TK_NUM , TK_HEX, TK_REG,
   TK_LBRACKET , TK_RBRACKET,
-  TK_MINUS , TK_DEREF,
-  TK_EQ, TK_NOTEQ, TK_ADD, TK_SUB, TK_MUL, TK_DIV,
-  TK_AND, TK_OR, TK_NOT,
+  TK_MINUS , 
+  TK_DEREF, 
+  TK_MUL, TK_DIV,
+  TK_ADD, TK_SUB,
+  TK_NOT,
+  TK_EQ, TK_NOTEQ, 
+  TK_AND, 
+  TK_OR, 
   /* TODO: Add more token types */
 
 };
@@ -325,7 +330,9 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-
+  for(int i=0;i<nr_token;i++){
+    printf("i:%d, type:%d\n",i,tokens[i].type);
+  }
   /* TODO: Insert codes to evaluate the expression. */
   
   return eval(0,nr_token-1,success);
