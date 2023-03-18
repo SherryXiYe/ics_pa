@@ -5,6 +5,7 @@
  */
 #include <sys/types.h>
 #include <regex.h>
+#include <string.h>
 
 enum {
   TK_NOTYPE = 0, 
