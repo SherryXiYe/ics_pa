@@ -128,6 +128,7 @@ static bool make_token(char *e) {
             break;
           case TK_REG:
             strncpy(tokens[nr_token].str,substr_start+1,substr_len-1);    //去掉$
+            strlwr(tokens[nr_token].str);                 //统一为小写字母
             tokens[nr_token].str[substr_len-1] = '\0';
             tokens[nr_token].precedence = OP_LV0;
             break;
