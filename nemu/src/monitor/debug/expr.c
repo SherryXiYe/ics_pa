@@ -325,13 +325,55 @@ uint32_t eval(int p, int q, bool *success){
   return 0;
 }
 
+char* type_name(int type){
+  switch (type)
+  {
+  case TK_NOTYPE:
+    return "NOTTYPE";
+  case TK_NUM:
+    return "NUM";
+  case TK_HEX:
+    return "HEX";
+  case TK_REG:
+    return "REG";
+  case TK_LBRACKET:
+    return "(";
+  case TK_RBRACKET:
+    return ")";
+  case TK_MINUS:
+    return "MINUS";
+  case TK_DEREF:
+    return "DEREF";
+  case TK_MUL:
+    return "MUL";
+  case TK_DIV:
+    return "\\";
+  case TK_ADD:
+    return "ADD";
+  case TK_SUB:
+    return "-";
+  case TK_NOT:
+    return "!";
+  case TK_EQ:
+    return "==";
+  case TK_NOTEQ:
+    return "!=";
+  case TK_AND:
+    return "&&";
+  case TK_OR:
+    return "||";
+  default:
+    break;
+  }
+}
+
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
     return 0;
   }
   for(int i=0;i<nr_token;i++){
-    printf("i:%d, type:%d\n",i,tokens[i].type);
+    printf("i:%d, type:%d, %s\n",i,tokens[i].type,type_name(tokens[i].type));
   }
   /* TODO: Insert codes to evaluate the expression. */
   
