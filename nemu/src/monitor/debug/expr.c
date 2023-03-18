@@ -10,7 +10,7 @@ enum {
   TK_NOTYPE = 0, 
   TK_NUM , TK_HEX, TK_REG,
   TK_LBRACKET , TK_RBRACKET,
-  TK_MINUS , 
+  TK_MINUS , TK_PLUS,
   TK_DEREF, 
   TK_MUL, TK_DIV,
   TK_ADD, TK_SUB,
@@ -147,14 +147,15 @@ static bool make_token(char *e) {
             break;
           case TK_ADD:
             // 前一个token是NUM、HEX、REG、）的是双目加；前一个token是 &&、||、！、==、!=、+、-、*、/、（ 的是单目加
-            if(nr_token==0 || !(tokens[nr_token-1].type == TK_NUM || tokens[nr_token].type == TK_HEX || tokens[nr_token].type == TK_REG || tokens[nr_token].type == TK_RBRACKET )){
+            if(nr_token==0 || !(tokens[nr_token-1].type == TK_NUM || tokens[nr_token-1].type == TK_HEX || tokens[nr_token-1].type == TK_REG || tokens[nr_token-1].type == TK_RBRACKET )){
               tokens[nr_token].precedence = OP_LV2_1; 
+              tokens[nr_token].type = TK_PLUS;
             }else{
               tokens[nr_token].precedence = OP_LV4;
             }
             break;
           case TK_SUB:
-            if(nr_token==0 || !(tokens[nr_token-1].type == TK_NUM || tokens[nr_token].type == TK_HEX || tokens[nr_token].type == TK_REG || tokens[nr_token].type == TK_RBRACKET )){
+            if(nr_token==0 || !(tokens[nr_token-1].type == TK_NUM || tokens[nr_token-1].type == TK_HEX || tokens[nr_token-1].type == TK_REG || tokens[nr_token-1].type == TK_RBRACKET )){
               tokens[nr_token].precedence = OP_LV2_1; 
               tokens[nr_token].type = TK_MINUS;
             }else{
@@ -165,7 +166,7 @@ static bool make_token(char *e) {
             tokens[nr_token].precedence = OP_LV3;
             break;
           case TK_MUL:
-            if(nr_token==0 || !(tokens[nr_token-1].type == TK_NUM || tokens[nr_token].type == TK_HEX || tokens[nr_token].type == TK_REG || tokens[nr_token].type == TK_RBRACKET )){
+            if(nr_token==0 || !(tokens[nr_token-1].type == TK_NUM || tokens[nr_token-1].type == TK_HEX || tokens[nr_token-1].type == TK_REG || tokens[nr_token-1].type == TK_RBRACKET )){
               tokens[nr_token].precedence = OP_LV2_2; 
               tokens[nr_token].type = TK_DEREF;
             }else{
@@ -283,7 +284,7 @@ uint32_t eval(int p, int q, bool *success){
     uint32_t right_val= eval(dominant_op+1,q,success);
     if(dominant_op==p){         //正常情况只能是单目运算符
       switch (tokens[dominant_op].type){
-      case TK_ADD:
+      case TK_PLUS:
         return right_val;
       case TK_MINUS:
         return -right_val;
@@ -342,6 +343,8 @@ char* type_name(int type){
     return ")";
   case TK_MINUS:
     return "MINUS";
+  case TK_PLUS:
+    return "PLUS";
   case TK_DEREF:
     return "DEREF";
   case TK_MUL:
