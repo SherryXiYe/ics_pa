@@ -210,7 +210,6 @@ bool check_parentheses(int p, int q, bool *success){
         isFirst = false;
       }
     }
-    printf("%d,count: %d    ",i,count);
     if(count<0)
       break;
   }
