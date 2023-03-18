@@ -135,7 +135,7 @@ static int cmd_p(char *args){
   if(!success){
     printf("Wrong expression. Please re-enter.\n");
   }else{
-    printf("%x\t%u\n",result,result);
+    printf("0x%08x\t%u\n",result,result);
   }
   return 0;
 }
