@@ -209,7 +209,8 @@ bool check_parentheses(int p, int q, bool *success){
       break;
   }
   if(count!=0){
-    success = false;
+    Log("Bracket mismatch.\n");
+    *success = false;
     return false;
   }
   if(tokens[p].type!=TK_LBRACKET || first_rbracket != q){
@@ -219,10 +220,27 @@ bool check_parentheses(int p, int q, bool *success){
   }
 } 
 
+// 找到子表达式中优先级最低的token的位置（单目运算符+、-、*、！是右结合，其余是左结合）
+int dominant_op_pos(int p, int q){
+  int min_pos = p;
+  for(int i=p+1;i<=q;i++){
+    if(tokens[i].type==OP_LV2_1 || tokens[i].type==OP_LV2_2 || tokens[i].type == OP_LV6){
+      if(tokens[i].precedence > tokens[min_pos].precedence)   //右结合，找最先出现的
+        min_pos = i;
+    }else{
+      if(tokens[i].precedence >= tokens[min_pos].precedence)   //右结合，找最后出现的
+        min_pos = i;
+    }
+  }
+  return min_pos;
+}
+
 uint32_t eval(int p, int q, bool *success){
+  if(!*success)
+      return 0;
   if(p>q){
     Log("Bad expression.\n");
-    success = false;
+    *success = false;
     return 0;
   }else if(p==q){
     if(tokens[p].type == TK_NUM){
@@ -239,14 +257,62 @@ uint32_t eval(int p, int q, bool *success){
         return value;
       }else{
         Log("Register name that does not exist.\n");
-        success = false;
+        *success = false;
+        return 0;
       }
     }
-  }else if(check_parentheses(p,q)==true){
-    return eval(p+1,q+1);
+  }else if(check_parentheses(p,q,success)==true){
+    return eval(p+1,q+1,success);
   }else{
-    if(!success)
+    int dominant_op = dominant_op_pos(p,q);
+    if(dominant_op==q){
+      Log("Bad dominant operator.\n");
+      *success = false;
+      return 0;
+    }
+    uint32_t right_val= eval(dominant_op+1,q,success);
+    if(dominant_op==p){         //正常情况只能是单目运算符
+      switch (tokens[dominant_op].type){
+      case TK_ADD:
+        return right_val;
+      case TK_MINUS:
+        return -right_val;
+      case TK_NOT:
+        return !right_val;
+      case TK_DEREF:
+        return vaddr_read(right_val,4);
+      default:
+        Log("Bad dominant operator.\n");
+        *success = false;
+        return 0;
+      }
+    }
+    uint32_t left_val = eval(p,dominant_op-1,success);
+    if(!*success)
+      return 0;
+    switch (tokens[dominant_op].type)     //处理双目运算符
+    {
+    case TK_ADD:
+      return left_val + right_val;
+    case TK_SUB:
+      return left_val - right_val;
+    case TK_MUL:
+      return left_val * right_val;
+    case TK_DIV:
+      return left_val / right_val;
+    case TK_EQ:
+      return left_val == right_val;
+    case TK_NOTEQ:
+      return left_val != right_val;
+    case TK_AND:
+      return left_val && right_val;
+    case TK_OR:
+     return left_val || right_val;
+    default:
+      break;
+    }
   }
+  return 0;
 }
 
 uint32_t expr(char *e, bool *success) {

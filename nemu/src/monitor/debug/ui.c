@@ -112,8 +112,12 @@ static int cmd_x(char *args){     // x N EXPR
   int N;
   sscanf(arg1,"%d",&N);
   char *arg2 = strtok(NULL, " ");      // 第二个参数
-  uint32_t addr;
-  sscanf(arg2,"%x",&addr);
+  bool success = true;
+  uint32_t addr = expr(arg2,&success);
+  if(!success){
+    printf("Wrong expression. Please re-enter.\n");
+    return 0;
+  }
   printf("0x%08x:    ",addr);
   for(int i=0;i<N;i++){
     printf("0x%08x  ",paddr_read(addr,4));
