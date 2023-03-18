@@ -74,7 +74,7 @@ static inline bool get_reg_value(char* reg_name, uint32_t* value){
   printf("reg search 1\n");
   for(int i=0;i<8;i++){
     printf("a\n");
-    if(strcmp(reg_name,regsl[i]==0)){
+    if(strcmp(reg_name,"eax"==0)){
       *value = reg_l(i);
       printf("reg search finish 1\n");
       return true;
