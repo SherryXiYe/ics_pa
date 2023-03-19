@@ -15,7 +15,7 @@ typedef struct watchpoint {
 WP* new_wp();
 void free_wp(int num);
 void print_wp_info();
-bool check_wp_value();
+bool check_wp_changed();
 
 #endif
 

@@ -125,7 +125,7 @@ static int cmd_x(char *args){     // x N EXPR
   }
   printf("0x%08x:    ",addr);
   for(int i=0;i<N;i++){
-    printf("0x%08x  ",paddr_read(addr,4));
+    printf("0x%08x  ",vaddr_read(addr,4));
     addr+=4;
   }
   printf("\n");
@@ -148,8 +148,7 @@ static int cmd_w(char *args){
   uint32_t result = expr(args, &success);
   if(!success){
     printf("Wrong expression. Please re-enter.\n");
-  }else{
-    printf("0x%08x\t%u\n",result,result);
+    return 0;
   }
   WP* newWp = new_wp();
   if(newWp!=NULL){

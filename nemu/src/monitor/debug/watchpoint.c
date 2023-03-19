@@ -110,7 +110,25 @@ void print_wp_info(){
   }
 }
 
-bool check_wp_value(){
-  
+bool check_wp_changed(){
+  bool changed = false; 
+  WP* p=head;
+  while (p!=NULL){
+    bool success = true;
+    uint32_t result = expr(p->expr, &success);
+    if(!success){
+      printf("Wrong expression. Please re-enter.\n");     //应该不会进入
+      return 0;
+    }
+    if(p->value!=result){
+      printf("Hardware watchpoint %d: %s\n",p->NO,p->expr);
+      printf("Old value = %d\n",p->value);
+      printf("New value = %d\n",result);
+      changed = true;
+      p->value = result;
+    }
+    p=p->next;
+  }
+  return changed;
 }
 
