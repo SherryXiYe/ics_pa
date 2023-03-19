@@ -42,6 +42,8 @@ static int cmd_si(char *args);
 static int cmd_info(char *args);
 static int cmd_x(char *args);
 static int cmd_p(char *args);
+static int cmd_w(char *args);
+static int cmd_d(char *args);
 
 static struct {
   char *name;
@@ -52,9 +54,11 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Single-step execution. Pause execution after N instructions are executed in one step.", cmd_si },
-  { "info", "Print program status.", cmd_info },
+  { "info", "Print program status. r: Print register status. w: Print watc point information.", cmd_info },
   { "x", "Scan memory. Take the value of the expression (the second parameter) as the starting memory address, and output consecutive N (the first parameter) 4 bytes in hexadecimal format.", cmd_x},
   { "p", "Expression evaluation.", cmd_p},
+  { "w", "Set up monitoring points. Pauses program execution when the value of the expression (first parameter) changes.", cmd_w },
+  { "d", "Delete the watch point with sequence number N.", cmd_d },
   /* TODO: Add more commands */
 
 };
@@ -137,6 +141,14 @@ static int cmd_p(char *args){
     printf("0x%08x\t%u\n",result,result);
   }
   return 0;
+}
+
+static int cmd_w(char *args){
+
+}
+
+static int cmd_d(char *args){
+
 }
 
 // 进入用户界面主循环，输出NEMU的命令提示符:(nemu)。
