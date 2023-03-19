@@ -112,7 +112,7 @@ static int cmd_x(char *args){     // x N EXPR
   char *arg1 = strtok(NULL, " "); 
   int N;
   sscanf(arg1,"%d",&N);
-  char *arg2 = strtok(NULL, " ");      // 第二个参数
+  char *arg2 = arg1 + strlen(arg1) + 1;      // 第二个参数
   bool success = true;
   uint32_t addr = expr(arg2,&success);
   if(!success){
