@@ -105,7 +105,7 @@ void print_wp_info(){
   WP* p=head;
   printf("Num\tWhat\t\t\tValue\t\tValue(HEX)\n");
   while (p!=NULL){
-    printf("%d\t%32s %16d\t\t0x%08x\n",p->NO,p->expr,p->value,p->value);
+    printf("%d\t%-32s %-16d\t\t0x%08x\n",p->NO,p->expr,p->value,p->value);
     p=p->next;
   }
 }
