@@ -110,6 +110,7 @@ static int cmd_info(char *args){
   }else{
     printf("Bad command parameter. Please re-enter.\n");
   }
+  return 0;
 }
 
 static int cmd_x(char *args){     // x N EXPR
