@@ -129,9 +129,8 @@ static int cmd_x(char *args){     // x N EXPR
 }
 
 static int cmd_p(char *args){
-  char *expr_arg = strtok(NULL, " "); 
   bool success = true;
-  uint32_t result = expr(expr_arg, &success);
+  uint32_t result = expr(args, &success);
   if(!success){
     printf("Wrong expression. Please re-enter.\n");
   }else{
