@@ -93,7 +93,7 @@ static int cmd_si(char *args){
   char *arg = strtok(NULL, " ");          //读取第一个参数
   uint64_t N = 1;        // N缺省为1，默认单步执行一条指令 
   if (arg != NULL) {
-    sscanf(arg,"%d",&N);
+    sscanf(arg,"%ld",&N);
   }
   cpu_exec(N);
   return 0;
