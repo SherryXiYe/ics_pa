@@ -103,7 +103,7 @@ void free_wp(int num){
 
 void print_wp_info(){
   WP* p=head;
-  printf("%-8s %-32s %-16s %-8x\n","Num","What","Value","Value(HEX)");
+  printf("%-8s %-32s %-16s %-8s\n","Num","What","Value","Value(HEX)");
   while (p!=NULL){
     printf("%-8d %-32s %-16d 0x%08x\n",p->NO,p->expr,p->value,p->value);
     p=p->next;
