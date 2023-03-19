@@ -22,7 +22,7 @@ void init_wp_pool() {
 
 WP* new_wp(){
   if(free_ == NULL){
-    Log("Failed to set watch point! There are currently no idle watch points.\n");
+    printf("Failed to set watch point! There are currently no idle watch points.\n");
     return NULL;
   }
   WP* freeWp =free_;
@@ -54,7 +54,63 @@ WP* new_wp(){
 }
 
 void free_wp(int num){
-
+  if(head == NULL){
+    printf("Failed to delete the watch point! There are currently no watch points in use.\n");
+    return;
+  }
+  WP* p=head,*last=NULL;
+  while (p != NULL){
+    if(p->NO==num){
+      if(p==head){
+        head = p->next;
+      }else{
+        last->next = p->next; 
+      }
+      break;
+    }
+    last = p;
+    p = p->next;
+  }
+  if(p==NULL){
+    printf("Failed to delete the monitoring point! The monitoring point corresponding to this serial number is not in use.\n");
+    return;
+  }
+  WP* temp = free_;
+  last=NULL;
+  while (temp != NULL){
+    if( temp->NO>p->NO ){
+      if(temp==free_){
+        p->next = free_;
+        free_ = p;
+      }else{
+        last->next = p;
+        p->next = temp;
+      }
+      break;
+    }
+    last = temp;
+    temp = temp->next;
+  }
+  if(temp==NULL){      //free_链表为空或插到链表尾
+    if(last==NULL){
+      free_ = p;
+    }else{
+      last->next = p;
+    }
+    p->next = temp;
+  }
 }
 
+void print_wp_info(){
+  WP* p=head;
+  printf("Num\tWhat\t\tValue\n");
+  while (p!=NULL){
+    printf("%d\t%s\t\t%d\n",p->NO,p->expr,p->value);
+    p=p->next;
+  }
+}
+
+bool check_wp_value(){
+  
+}
 

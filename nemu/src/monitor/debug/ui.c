@@ -106,7 +106,7 @@ static int cmd_info(char *args){
       printf("%s\t%08x\t%u\n",reg_name(i,4),reg_l(i),reg_l(i));
     }
   }else if(strcmp(arg,"w") == 0){   // info w：打印监视点信息
-
+    print_wp_info();
   }else{
     printf("Bad command parameter. Please re-enter.\n");
   }
@@ -144,11 +144,28 @@ static int cmd_p(char *args){
 }
 
 static int cmd_w(char *args){
-
+  bool success = true;
+  uint32_t result = expr(args, &success);
+  if(!success){
+    printf("Wrong expression. Please re-enter.\n");
+  }else{
+    printf("0x%08x\t%u\n",result,result);
+  }
+  WP* newWp = new_wp();
+  if(newWp!=NULL){
+    newWp->value = result;
+    strcpy(newWp->expr,args);
+    printf("watchpoint %d: %s  %d\n",newWp->NO,newWp->expr,newWp->value);
+  }
+  return 0;
 }
 
 static int cmd_d(char *args){
-
+  char *arg = strtok(NULL, " "); 
+  int N;
+  sscanf(arg,"%d",&N);
+  free_wp(N);
+  return 0;
 }
 
 // 进入用户界面主循环，输出NEMU的命令提示符:(nemu)。
