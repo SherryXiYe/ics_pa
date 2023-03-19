@@ -103,9 +103,9 @@ void free_wp(int num){
 
 void print_wp_info(){
   WP* p=head;
-  printf("Num\tWhat\t\tValue\n");
+  printf("Num\tWhat\t\t\t\tValue\t\tValue(HEX)\n");
   while (p!=NULL){
-    printf("%d\t%s\t\t%d\n",p->NO,p->expr,p->value);
+    printf("%d\t%s\t\t\t\t%d\t\t0x%08x\n",p->NO,p->expr,p->value,p->value);
     p=p->next;
   }
 }
@@ -122,8 +122,8 @@ bool check_wp_changed(){
     }
     if(p->value!=result){
       printf("Hardware watchpoint %d: %s\n",p->NO,p->expr);
-      printf("Old value = %d\n",p->value);
-      printf("New value = %d\n",result);
+      printf("Old value = %d\t0x%08x\n",p->value,p->value);
+      printf("New value = %d\t0x%08x\n",result,result);
       changed = true;
       p->value = result;
     }
