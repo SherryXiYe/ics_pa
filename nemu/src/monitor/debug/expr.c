@@ -239,7 +239,7 @@ int dominant_op_pos(int p, int q){
       if(tokens[i].precedence > tokens[min_pos].precedence)   //右结合，找最先出现的
         min_pos = i;
     }else{
-      if(tokens[i].precedence >= tokens[min_pos].precedence)   //右结合，找最后出现的
+      if(tokens[i].precedence >= tokens[min_pos].precedence)   //左结合，找最后出现的
         min_pos = i;
     }
   }
