@@ -55,7 +55,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "Single-step execution. Pause execution after N instructions are executed in one step.", cmd_si },
   { "info", "Print program status. r: Print register status. w: Print watc point information.", cmd_info },
-  { "x", "Scan memory. Take the value of the expression (the second parameter) as the starting memory address, and output consecutive N (the first parameter) 4 bytes in hexadecimal format.", cmd_x},
+  { "x", "Scan memory. Take the value of the expression as the starting memory address, and output consecutive N 4 bytes in hexadecimal format.", cmd_x},
   { "p", "Expression evaluation.", cmd_p},
   { "w", "Set up monitoring points. Pauses program execution when the value of the expression (first parameter) changes.", cmd_w },
   { "d", "Delete the watch point with sequence number N.", cmd_d },
