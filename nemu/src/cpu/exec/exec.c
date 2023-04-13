@@ -23,10 +23,10 @@ static inline void set_width(int width) {
 
 /* Instruction Decode and EXecute */
 static inline void idex(vaddr_t *eip, opcode_entry *e) {
-  /* eip is pointing to the byte next to opcode */
+  /* eip is pointing to the byte next to opcode 因为在instr_fetch中(*eip)+=len */
   if (e->decode)
-    e->decode(eip);
-  e->execute(eip);
+    e->decode(eip);       //调用译码查找表opcode_table中相应的译码函数进行操作数的译码
+  e->execute(eip);        //调用译码查找表opcode_table中相应的执行函数来进行真正的执行操作
 }
 
 static make_EHelper(2byte_esc);
@@ -71,7 +71,7 @@ make_group(gp7,
     EMPTY, EMPTY, EMPTY, EMPTY)
 
 /* TODO: Add more instructions!!! */
-
+//每一个opcode对应相应指令的译码函数、执行函数、操作数宽度
 opcode_entry opcode_table [512] = {
   /* 0x00 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x04 */	EMPTY, EMPTY, EMPTY, EMPTY,
@@ -213,13 +213,15 @@ static make_EHelper(2byte_esc) {
   idex(eip, &opcode_table[opcode]);
 }
 
+//make_Ehelper在exec.h中，此处定义了函数：void exec_real (vaddr_t *eip)
 make_EHelper(real) {
-  uint32_t opcode = instr_fetch(eip, 1);
-  decoding.opcode = opcode;
-  set_width(opcode_table[opcode].width);
-  idex(eip, &opcode_table[opcode]);
+  uint32_t opcode = instr_fetch(eip, 1);    //取指，得到指令的第一个字节。该步骤后，eip指向opcode后的一个字节
+  decoding.opcode = opcode;                 //记录在全局译码信息decoding中
+  set_width(opcode_table[opcode].width);    //根据opcode查阅译码查找表，得到操作数的宽度信息。并调用Set_width将其记录在全局译码信息decoding中
+  idex(eip, &opcode_table[opcode]);         //根据opcode对应的opcode_table信息，来进行进一步的译码和执行
 }
 
+//对%eip进行更新，让其指向下一条要指向的指令
 static inline void update_eip(void) {
   cpu.eip = (decoding.is_jmp ? (decoding.is_jmp = 0, decoding.jmp_eip) : decoding.seq_eip);
 }
@@ -231,8 +233,9 @@ void exec_wrapper(bool print_flag) {
   decoding.p += sprintf(decoding.p, "%8x:   ", cpu.eip);
 #endif
 
-  decoding.seq_eip = cpu.eip;
-  exec_real(&decoding.seq_eip);
+  decoding.seq_eip = cpu.eip;     //首先将当前的%eip保存到全局译码信息decoding的成员seq_eip中
+  exec_real(&decoding.seq_eip);   //然后将seq_eip的地址作为参数送进exec_real函数。
+                                  //当代码从 exec_real()返回时,decoding.seq_eip 将会指向下一条指令的地址.（因为该过程中调用instr_fetch函数会改变decoding.seq_eip）
 
 #ifdef DEBUG
   int instr_len = decoding.seq_eip - cpu.eip;
@@ -248,7 +251,7 @@ void exec_wrapper(bool print_flag) {
   uint32_t eip = cpu.eip;
 #endif
 
-  update_eip();
+  update_eip();       //更新%eip
 
 #ifdef DIFF_TEST
   void difftest_step(uint32_t);

@@ -3,10 +3,15 @@
 
 /* shared by all helper functions */
 DecodeInfo decoding;
-rtlreg_t t0, t1, t2, t3;
-const rtlreg_t tzero = 0;
+rtlreg_t t0, t1, t2, t3;            // NEMU中，临时寄存器t0~t3是RTL寄存器
+const rtlreg_t tzero = 0;           // NEMU中，0寄存器tzero是RTL寄存器。它只能读出0，不能写入 
 
+//操作数译码函数统一通过函数 make_DopHelper(name)来定义（decode_op_rm()函数除外）。定义一个名字是decode_op_'name'的操作数译码函数
 #define make_DopHelper(name) void concat(decode_op_, name) (vaddr_t *eip, Operand *op, bool load_val)
+// 操作数译码函数会把操作数的信息记录在结构体 op 中
+// 如果操作数在指令中,就会通过 instr_fetch()将它们从 eip 所指向的内存位置取出.
+// load_val 参数会控制是否需要将该操作数读出到全局译码信息 decoding 供后续使用.（例：如果是目的操作数则不需要从内存中读出它的值）
+
 
 /* Refer to Appendix A in i386 manual for the explanations of these abbreviations */
 
@@ -304,8 +309,9 @@ make_DHelper(out_a2dx) {
 #endif
 }
 
+//根据参数操作数op中记录的类型的不同，来进行相应的写操作。
 void operand_write(Operand *op, rtlreg_t* src) {
-  if (op->type == OP_TYPE_REG) { rtl_sr(op->reg, op->width, src); }
-  else if (op->type == OP_TYPE_MEM) { rtl_sm(&op->addr, op->width, src); }
+  if (op->type == OP_TYPE_REG) { rtl_sr(op->reg, op->width, src); }     //写寄存器。将宽度为width的src的内容写入编号为op->reg的宽度为width的寄存器中
+  else if (op->type == OP_TYPE_MEM) { rtl_sm(&op->addr, op->width, src); }      //写内存。将宽度为width的src的内容写入内存地址op->addr中
   else { assert(0); }
 }

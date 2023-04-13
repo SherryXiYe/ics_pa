@@ -14,7 +14,7 @@ typedef struct {
   int width;
   union {
     uint32_t reg;
-    rtlreg_t addr;
+    rtlreg_t addr;        // NEMU中，id_src,id_src2和id_dest中的访存地址addr和操作数内容val是RTL寄存器
     uint32_t imm;
     int32_t simm;
   };
@@ -22,14 +22,15 @@ typedef struct {
   char str[OP_STR_SIZE];
 } Operand;
 
+//记录一些全局译码信息供后续使用，包括操作数的类型、宽度、值等信息。
 typedef struct {
-  uint32_t opcode;
-  vaddr_t seq_eip;  // sequential eip
+  uint32_t opcode;    //当前执行指令的操作码
+  vaddr_t seq_eip;    // sequential eip  顺序执行时（不跳转），%eip应该指向的地址
   bool is_operand_size_16;
   uint8_t ext_opcode;
-  bool is_jmp;
-  vaddr_t jmp_eip;
-  Operand src, dest, src2;
+  bool is_jmp;                //当前指令是不是跳转指令
+  vaddr_t jmp_eip;            //跳转指令的目标地址（跳转后%eip应该指向的地址）
+  Operand src, dest, src2;    //代表两个源操作数和一个目的操作数
 #ifdef DEBUG
   char assembly[80];
   char asm_buf[128];
@@ -67,16 +68,18 @@ void operand_write(Operand *, rtlreg_t *);
 /* shared by all helper functions */
 extern DecodeInfo decoding;
 
-#define id_src (&decoding.src)
+// 三个宏id_src、id_src2、id_dest用于方便地访问decoding结构的两个源操作数和一个目的操作数
+#define id_src (&decoding.src)      
 #define id_src2 (&decoding.src2)
 #define id_dest (&decoding.dest)
 
+//宏make_DopHelper(name)定义一个名字是decode_'name'的译码函数。这些译码函数会进一步分解成各种不同操作数的译码的组合，以实现操作数译码的解耦
 #define make_DHelper(name) void concat(decode_, name) (vaddr_t *eip)
 typedef void (*DHelper) (vaddr_t *);
 
 make_DHelper(I2E);
 make_DHelper(I2a);
-make_DHelper(I2r);
+make_DHelper(I2r);        
 make_DHelper(SI2E);
 make_DHelper(SI_E2G);
 make_DHelper(I_E2G);

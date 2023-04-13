@@ -3,11 +3,13 @@
 
 #include "nemu.h"
 
+//宏make_EHelpr(name)定义一个名字是exec_'name'的执行函数（定义一个执行阶段相关的helper函数），均有一个参数eip（指针类型，传入参数时记得传地址）
 #define make_EHelper(name) void concat(exec_, name) (vaddr_t *eip)
 typedef void (*EHelper) (vaddr_t *);
 
 #include "cpu/decode.h"
 
+//取指。取指针eip对应指令的从低位开始的len个字节，并更改（*eip）令eip指向len个字节之后
 static inline uint32_t instr_fetch(vaddr_t *eip, int len) {
   uint32_t instr = vaddr_read(*eip, len);
 #ifdef DEBUG
@@ -17,7 +19,7 @@ static inline uint32_t instr_fetch(vaddr_t *eip, int len) {
     decoding.p += sprintf(decoding.p, "%02x ", p_instr[i]);
   }
 #endif
-  (*eip) += len;
+  (*eip) += len;      
   return instr;
 }
 

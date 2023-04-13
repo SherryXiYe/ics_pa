@@ -102,6 +102,7 @@ static inline void rtl_lr(rtlreg_t* dest, int r, int width) {
   }
 }
 
+//将src1中的内容写入编号为r的寄存器中。其中要根据宽度来选择不同宽度的寄存器
 static inline void rtl_sr(int r, int width, const rtlreg_t* src1) {
   switch (width) {
     case 4: rtl_sr_l(r, src1); return;
