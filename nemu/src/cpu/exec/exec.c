@@ -1,6 +1,7 @@
 #include "cpu/exec.h"
 #include "all-instr.h"
 
+//每一个opcode对应相应指令的译码函数、执行函数、操作数宽度
 typedef struct {
   DHelper decode;
   EHelper execute;
