@@ -114,10 +114,10 @@ static inline void rtl_sr(int r, int width, const rtlreg_t* src1) {
 
 #define make_rtl_setget_eflags(f) \
   static inline void concat(rtl_set_, f) (const rtlreg_t* src) { \
-    TODO(); \
+    cpu.f=*src; \
   } \
   static inline void concat(rtl_get_, f) (rtlreg_t* dest) { \
-    TODO(); \
+    *dest = cpu.f; \
   }
 
 make_rtl_setget_eflags(CF)
@@ -143,43 +143,56 @@ static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
 static inline void rtl_push(const rtlreg_t* src1) {
   // esp <- esp - 4
   // M[esp] <- src1
-  TODO();
+  rtl_subi(&cpu.esp,&cpu.esp,4);    //抬高栈顶cpu.esp。32bit
+  rtl_sm(&cpu.esp,4,src1);          //写入内存
 }
 
 static inline void rtl_pop(rtlreg_t* dest) {
   // dest <- M[esp]
   // esp <- esp + 4
-  TODO();
+  rlt_lm(dest,&cpu.esp,4);
+  rtl_addi(&cpu.esp,&cpu.esp,4);
 }
 
 static inline void rtl_eq0(rtlreg_t* dest, const rtlreg_t* src1) {
   // dest <- (src1 == 0 ? 1 : 0)
-  TODO();
+  // TODO();
+  if(*src1==0){
+    *dest=1;
+  }else{
+    *dest=0;
+  }
 }
 
 static inline void rtl_eqi(rtlreg_t* dest, const rtlreg_t* src1, int imm) {
   // dest <- (src1 == imm ? 1 : 0)
-  TODO();
+  // TODO();
+  rtl_xori(dest,src1,imm);
+  rtl_eq0(dest,dest);
 }
 
 static inline void rtl_neq0(rtlreg_t* dest, const rtlreg_t* src1) {
   // dest <- (src1 != 0 ? 1 : 0)
-  TODO();
+  // TODO();
+  rtl_eq0(dest,src1);
+  rtl_eq0(dest,dest);
 }
 
 static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
-  // dest <- src1[width * 8 - 1]
-  TODO();
+  // dest <- src1[width * 8 - 1]   只要这一位
+  rtl_shri(dest,src1,width*8-1);  //右移
+  rtl_andi(dest,dest,0x1);
 }
 
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
-  TODO();
+  cpu.ZF = ((~0u >> (32 - width * 8)) & *result) == 0;
 }
 
 static inline void rtl_update_SF(const rtlreg_t* result, int width) {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
-  TODO();
+  assert(result!=&t0);
+  rtl_msb(&t0,result,width);
 }
 
 static inline void rtl_update_ZFSF(const rtlreg_t* result, int width) {

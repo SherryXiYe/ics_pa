@@ -1,5 +1,5 @@
 #include "cpu/exec.h"
-
+//逻辑运算执行函数的实现
 make_EHelper(test) {
   TODO();
 

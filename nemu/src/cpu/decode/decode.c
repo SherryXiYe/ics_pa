@@ -43,8 +43,12 @@ static inline make_DopHelper(SI) {
    *
    op->simm = ???
    */
-  TODO();
-
+  uint32_t uimm =instr_fetch(eip,op->width);
+  if(op->width==1){
+    op->simm=(int8_t)uimm;
+  }else{
+    op->simm=(int32_t)(uimm);
+  }
   rtl_li(&op->val, op->simm);
 
 #ifdef DEBUG
@@ -74,9 +78,9 @@ static inline make_DopHelper(a) {
  */
 static inline make_DopHelper(r) {
   op->type = OP_TYPE_REG;
-  op->reg = decoding.opcode & 0x7;
+  op->reg = decoding.opcode & 0x7;      //opcode低三位
   if (load_val) {
-    rtl_lr(&op->val, op->reg, op->width);
+    rtl_lr(&op->val, op->reg, op->width);       //将decoding.opcode中标志的寄存器中的内容放入op->val中
   }
 
 #ifdef DEBUG
@@ -141,8 +145,8 @@ make_DHelper(lea_M2G) {
  * eAX <- Iv
  */
 make_DHelper(I2a) {
-  decode_op_a(eip, id_dest, true);
-  decode_op_I(eip, id_src, true);
+  decode_op_a(eip, id_dest, true);        //读取AX/EAX中的数据写入id_dest（Operand类型）
+  decode_op_I(eip, id_src, true);         //读取立即数存入id_src
 }
 
 /* Gv <- EvIb
@@ -266,9 +270,9 @@ make_DHelper(a2O) {
 }
 
 make_DHelper(J) {
-  decode_op_SI(eip, id_dest, false);
+  decode_op_SI(eip, id_dest, false);        //立即数的读取
   // the target address can be computed in the decode stage
-  decoding.jmp_eip = id_dest->simm + *eip;
+  decoding.jmp_eip = id_dest->simm + *eip;    //更新jmp_eip
 }
 
 make_DHelper(push_SI) {

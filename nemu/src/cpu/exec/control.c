@@ -1,5 +1,5 @@
 #include "cpu/exec.h"
-
+//控制语句执行函数的实现
 make_EHelper(jmp) {
   // the target address is calculated at the decode stage
   decoding.is_jmp = 1;
@@ -25,7 +25,8 @@ make_EHelper(jmp_rm) {
 
 make_EHelper(call) {
   // the target address is calculated at the decode stage
-  TODO();
+  rtl_push(eip);
+  decoding.is_jmp = 1;
 
   print_asm("call %x", decoding.jmp_eip);
 }

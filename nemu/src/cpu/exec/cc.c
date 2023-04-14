@@ -1,5 +1,5 @@
 #include "cpu/rtl.h"
-
+//SETcc执行函数的实现
 /* Condition Code */
 
 void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {

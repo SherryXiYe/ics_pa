@@ -1,19 +1,18 @@
 #include "cpu/exec.h"
-
+//数据传输指令执行函数的实现
 make_EHelper(mov) {
   operand_write(id_dest, &id_src->val);
   print_asm_template2(mov);
 }
 
 make_EHelper(push) {
-  TODO();
-
+  rtl_push(&id_dest->val);
   print_asm_template1(push);
 }
 
 make_EHelper(pop) {
-  TODO();
-
+  rtl_pop(&t0);
+  operand_write(id_dest,&t0);
   print_asm_template1(pop);
 }
 

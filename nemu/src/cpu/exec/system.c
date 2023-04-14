@@ -1,4 +1,5 @@
 #include "cpu/exec.h"
+//含有IO指令
 
 void diff_test_skip_qemu();
 void diff_test_skip_nemu();

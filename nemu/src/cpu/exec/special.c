@@ -1,5 +1,6 @@
 #include "cpu/exec.h"
 #include "monitor/monitor.h"
+//含nop、nemu_trap指令
 
 make_EHelper(nop) {
   print_asm("nop");

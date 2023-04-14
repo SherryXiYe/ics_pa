@@ -1,4 +1,5 @@
 #include "cpu/exec.h"
+//实现16bit与32bit操作数的切换（指令的0x66前缀）
 
 make_EHelper(real);
 

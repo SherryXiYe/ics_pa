@@ -1,4 +1,20 @@
 #include "cpu/exec.h"
+//算术运算执行函数的实现
+
+//进行eflags的各标志位的设置
+static inline void eflags_modify(){
+  rtl_sub(&t2,&id_dest->val,&id_src->val);
+  rtl_update_ZFSF(&t2,id_dest->width);      // ZF SF
+
+  rtl_sltu(&t0,&id_dest->val,&id_src->val);
+  rtl_set_CF(&t0);
+
+  rtl_xor(&t0,&id_dest->val,&id_src->val);
+  rtl_xor(&t1,&id_dest->val,&t2);
+  rtl_and(&t0,&t0,&t1);
+  rtl_msb(&t0,&t0,id_dest->width);
+  rtl_set_OF(&t0);
+}
 
 make_EHelper(add) {
   TODO();
@@ -7,8 +23,9 @@ make_EHelper(add) {
 }
 
 make_EHelper(sub) {
-  TODO();
-
+  // TODO();
+  eflags_modify();
+  operand_write(id_dest,&t2);
   print_asm_template2(sub);
 }
 

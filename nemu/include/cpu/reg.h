@@ -33,7 +33,22 @@ typedef struct {
     };
   };
   vaddr_t eip;
-
+  //eflags寄存器
+  union {
+    struct {
+      uint32_t CF : 1;
+      uint32_t    : 1;
+      uint32_t    : 4;
+      uint32_t ZF : 1;
+      uint32_t SF : 1;  //bit 0-7
+      uint32_t    : 1;
+      uint32_t IF : 1;
+      uint32_t    : 1;
+      uint32_t OF : 1;
+      uint32_t    : 20;  //bit 8-31
+    };
+    uint32_t eflags;
+  };
 } CPU_state;
 
 extern CPU_state cpu;
