@@ -29,17 +29,27 @@ make_EHelper(popa) {
 }
 
 make_EHelper(leave) {
-  TODO();
-
+  // TODO();
+  rtl_mv(&cpu.esp, &cpu.ebp);
+  rtl_pop(&cpu.ebp);
   print_asm("leave");
 }
 
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
-    TODO();
+    // TODO();
+    rtl_msb(&t0, &cpu.eax, 2);
+    if (t0 == 1)
+      cpu.edx |= 0xffff;
+    else
+      cpu.edx &= 0xffff0000; 
   }
   else {
-    TODO();
+    // TODO();
+    if ((int32_t)cpu.eax < 0)
+      cpu.edx = 0xffffffff;
+    else
+      cpu.edx = 0;
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
