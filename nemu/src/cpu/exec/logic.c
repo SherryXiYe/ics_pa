@@ -10,7 +10,7 @@ make_EHelper(test) {
 }
 
 make_EHelper(and) {
-  TODO();
+  // TODO();
   rtl_and(&t0, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t0);
 
