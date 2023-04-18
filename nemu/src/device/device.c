@@ -1,6 +1,6 @@
 #include "common.h"
 
-#ifdef HAS_IOE
+#ifdef HAS_IOE            //在nemu/include/common.h中定义
 
 #include <sys/time.h>
 #include <signal.h>
@@ -73,6 +73,7 @@ void sdl_clear_event_queue() {
   while (SDL_PollEvent(&event));
 }
 
+//对设备进行初始化
 void init_device() {
   init_serial();
   init_timer();

@@ -5,15 +5,18 @@
 static unsigned long boot_time;
 
 void _ioe_init() {
-  boot_time = inl(RTC_PORT);
+  boot_time = inl(RTC_PORT);        //从系统启动到IDE启动时经过的毫秒数
 }
 
+//返回经过的毫秒数
 unsigned long _uptime() {
-  return 0;
+  unsigned long useTime_ms=inl(RTC_PORT) - boot_time;
+  return useTime_ms;
 }
 
 uint32_t* const fb = (uint32_t *)0x40000;
 
+//结构体_scree用于指示屏幕的大小
 _Screen _screen = {
   .width  = 400,
   .height = 300,
@@ -21,6 +24,7 @@ _Screen _screen = {
 
 extern void* memcpy(void *, const void *, int);
 
+//用于将 pixels 指定的矩形像素绘制到屏幕中以(x, y)和(x+w, y+h)两点连线为对角线的矩形区域
 void _draw_rect(const uint32_t *pixels, int x, int y, int w, int h) {
   int i;
   for (i = 0; i < _screen.width * _screen.height; i++) {
@@ -28,9 +32,11 @@ void _draw_rect(const uint32_t *pixels, int x, int y, int w, int h) {
   }
 }
 
+//用于将之前的绘制内容同步到屏幕上(在 NEMU 中绘制内容总是会同步到屏幕上,因而无需实现此 API)
 void _draw_sync() {
 }
 
+// 用于返回按键的键盘码,若无按键,则返回_KEY_NONE
 int _read_key() {
   return _KEY_NONE;
 }
