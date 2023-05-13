@@ -5,7 +5,10 @@ void diff_test_skip_qemu();
 void diff_test_skip_nemu();
 
 make_EHelper(lidt) {
-  TODO();
+  // TODO();
+  t1=id_dest->val;  //data数组的地址
+  cpu.idtr.limit = vaddr_read(t1, 2);  // 读取data[0]为idtr.limit
+  cpu.idtr.base = vaddr_read(t1 + 2, 4);  // 读取data[1]、data[2]为idtr.base, 32bit
 
   print_asm_template1(lidt);
 }

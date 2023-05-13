@@ -35,7 +35,7 @@ void _asye_init(_RegSet*(*h)(_Event, _RegSet*)) {
   // -------------------- system call --------------------------
   idt[0x80] = GATE(STS_TG32, KSEL(SEG_KCODE), vecsys, DPL_USER);
 
-  set_idt(idt, sizeof(idt));
+  set_idt(idt, sizeof(idt));    //在IDTR中设置idt的首地址和长度
 
   // register event handler
   H = h;

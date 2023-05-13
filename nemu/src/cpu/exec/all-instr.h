@@ -50,17 +50,21 @@ make_EHelper(lea);
 make_EHelper(nop);
 
 make_EHelper(call_rm);
+
+// cpu/exec/system.c中
 make_EHelper(in);
 make_EHelper(out);
-
-make_EHelper(cwtl);
-make_EHelper(operand_size);
-make_EHelper(rol);
 make_EHelper(lidt);
 make_EHelper(int);
-make_EHelper(pusha);
-make_EHelper(popa);
 make_EHelper(iret);
 make_EHelper(mov_r2cr);
 make_EHelper(mov_cr2r);
+
+make_EHelper(pusha);
+make_EHelper(popa);
+make_EHelper(cwtl);
+make_EHelper(operand_size);
+make_EHelper(rol);
+
+
 

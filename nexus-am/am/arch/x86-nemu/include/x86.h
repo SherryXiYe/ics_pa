@@ -97,12 +97,12 @@ static inline void set_cr0(uint32_t cr0) {
   asm volatile("movl %0, %%cr0" : : "r"(cr0));
 }
 
-
+// 将存有idt信息的data首地址存入eax寄存器，并调用lidt指令
 static inline void set_idt(GateDesc *idt, int size) {
-  volatile static uint16_t data[3];
-  data[0] = size - 1;
-  data[1] = (uint32_t)idt;
-  data[2] = (uint32_t)idt >> 16;
+  volatile static uint16_t data[3];     // 数组data存储idt的地址和长度
+  data[0] = size - 1;             // limit，限制IDT的长度。即 idtr.limit
+  data[1] = (uint32_t)idt;        // idtr.base的低16位
+  data[2] = (uint32_t)idt >> 16;  // idtr.base的高16位
   asm volatile("lidt (%0)" : : "r"(data));
 }
 

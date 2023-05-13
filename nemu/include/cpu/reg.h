@@ -49,6 +49,12 @@ typedef struct {
     };
     uint32_t eflags;
   };
+  // IDTR寄存器
+  struct {
+    uint16_t limit;   // IDT的首地址和长度
+    uint32_t base;
+  } idtr;
+  
 } CPU_state;
 
 extern CPU_state cpu;

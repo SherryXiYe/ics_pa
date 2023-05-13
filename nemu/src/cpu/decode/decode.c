@@ -313,6 +313,10 @@ make_DHelper(out_a2dx) {
 #endif
 }
 
+make_DHelper(lidt_a){
+  decode_op_a(eip,id_dest,true);
+}
+
 //根据参数操作数op中记录的类型的不同，来进行相应的写操作。
 void operand_write(Operand *op, rtlreg_t* src) {
   if (op->type == OP_TYPE_REG) { rtl_sr(op->reg, op->width, src); }     //写寄存器。将宽度为width的src的内容写入编号为op->reg的宽度为width的寄存器中
