@@ -6,6 +6,7 @@ static _RegSet* (*H)(_Event, _RegSet*) = NULL;
 void vecsys();
 void vecnull();
 
+// 根据_RegSet结构中的异常请求号irq设置事件ev.event（把异常封装为事件）
 _RegSet* irq_handle(_RegSet *tf) {
   _RegSet *next = tf;
   if (H) {
