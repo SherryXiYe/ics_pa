@@ -6,16 +6,10 @@ void diff_test_skip_nemu();
 
 make_EHelper(lidt) {
   // TODO();
-  // t1=id_dest->val;  //data数组的地址
-  // cpu.idtr.limit = vaddr_read(t1, 2);  // 读取data[0]为idtr.limit
-  // cpu.idtr.base = vaddr_read(t1 + 2, 4);  // 读取data[1]、data[2]为idtr.base, 32bit
-  t1=id_dest->val;//address of data array
-  rtl_lm(&t0,&t1,2);//t0 = data[0], the limit length of IDT
-  cpu.idtr.limit=t0;
+  t1=id_dest->val;  //data数组的地址
+  cpu.idtr.limit = vaddr_read(t1, 2);  // 读取data[0]为idtr.limit
+  cpu.idtr.base = vaddr_read(t1 + 2, 4);  // 读取data[1]、data[2]为idtr.base, 32bit
 
-  t1=id_dest->val+2;
-  rtl_lm(&t0,&t1,4);//t0 = base address of IDT, 32bit
-  cpu.idtr.base=t0;
   print_asm_template1(lidt);
 }
 
