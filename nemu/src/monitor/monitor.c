@@ -86,7 +86,7 @@ static inline void restart() {
   /* Set the initial instruction pointer. */
   cpu.eip = ENTRY_START;        //将 %eip 的处置设置为约定的起始内存位置0x100000
   cpu.eflags=2;           //进行eflags的初始化
-
+  cpu.CS = 8;             //进行CS寄存器的初始化
 #ifdef DIFF_TEST
   init_qemu_reg();
 #endif

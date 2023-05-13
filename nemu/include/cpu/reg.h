@@ -54,7 +54,9 @@ typedef struct {
     uint16_t limit;   // IDT的首地址和长度
     uint32_t base;
   } idtr;
-  
+  //CS寄存器 
+  uint32_t CS;
+
 } CPU_state;
 
 extern CPU_state cpu;
