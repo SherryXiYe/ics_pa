@@ -17,7 +17,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   uint32_t off_15_0=vaddr_read(gate_addr,2);      //低16位offset
   uint32_t off_32_16=vaddr_read(gate_addr+sizeof(GateDesc)-2,2);    //高16位offset
   uint32_t jmp_addr=(off_32_16<<16)|(off_15_0 & 0xffff);
-
+  Log("jmp_addr: 0x%x",jmp_addr);
   decoding.jmp_eip=jmp_addr;
   decoding.is_jmp=1;
 }

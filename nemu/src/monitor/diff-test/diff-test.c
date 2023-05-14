@@ -154,16 +154,18 @@ void difftest_step(uint32_t eip) {
     if (r.array[i] != reg_l(i)) {
       diff = true;
       printf("DIFF: %x: %s\tnemu:0x%x\tqemu:0x%x\n", eip, reg_name(i, 4), reg_l(i), r.array[i]);
-    }else{
-      printf("%x: %s\tnemu:0x%x\tqemu:0x%x\n", eip, reg_name(i, 4), reg_l(i), r.array[i]);
     }
+    // else{
+    //   printf("%x: %s\tnemu:0x%x\tqemu:0x%x\n", eip, reg_name(i, 4), reg_l(i), r.array[i]);
+    // }
   }
   if (r.eip != cpu.eip) {
     diff = true;
     printf("DIFF: EIP\tnemu:%x\tqemu:%x\n", cpu.eip, r.eip);
-  } else{
-    printf("EIP\tnemu:%x\tqemu:%x\n", cpu.eip, r.eip);
-  }
+  } 
+  // else{
+  //   printf("EIP\tnemu:%x\tqemu:%x\n", cpu.eip, r.eip);
+  // }
 
   if (diff) {
     nemu_state = NEMU_END;
