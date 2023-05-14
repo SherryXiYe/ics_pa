@@ -30,8 +30,17 @@ int _write(int fd, void *buf, size_t count){
   return _syscall_(SYS_write,fd,(uintptr_t)buf,count);
 }
 
+extern char end;
+static uintptr_t probreak_old=(uintptr_t)&end;
+
 void *_sbrk(intptr_t increment){
-  return (void *)-1;
+  uintptr_t probreak_new=probreak_old+increment;
+  if(syscall_(SYS_brk,probreak_new,0,0)==0){    // 分配成功
+    uintptr_t temp=probreak_old;
+    probreak_old=probreak_new;
+    return (void*)temp;
+  }
+  return (void *)-1;    // 分配失败，返回-1
 }
 
 int _read(int fd, void *buf, size_t count) {
