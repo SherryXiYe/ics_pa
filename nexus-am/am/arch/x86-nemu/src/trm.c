@@ -27,6 +27,7 @@ static void serial_init() {
 #endif
 }
 
+//将字符ch输出到串口
 void _putc(char ch) {
 #ifdef HAS_SERIAL
   while ((inb(SERIAL_PORT + 5) & 0x20) == 0);
