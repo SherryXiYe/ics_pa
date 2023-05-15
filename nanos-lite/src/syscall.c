@@ -33,8 +33,8 @@ int sys_read(int fd,void *buf,size_t len){
   return fs_read(fd,buf,len);
 }
 
-int sys_open(const char* pathname){
-  return fs_open(pathname,0,0);
+int sys_open(const char *pathname, int flags, int mode){
+  return fs_open(pathname,flags,mode);
 }
 
 int sys_lseek(int fd, off_t offset,int whence){
@@ -69,7 +69,7 @@ _RegSet* do_syscall(_RegSet *r) {
       SYSCALL_ARG1(r)=sys_read(a[1],(void*)a[2],a[3]);
       break;
     case SYS_open:
-      SYSCALL_ARG1(r)=sys_open((char*)a[1]);
+      SYSCALL_ARG1(r)=sys_open((char*)a[1],a[2],a[3]);
       break;
     case SYS_lseek:
       SYSCALL_ARG1(r)=sys_lseek(a[1],a[2],a[3]);
