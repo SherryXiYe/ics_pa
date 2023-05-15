@@ -36,9 +36,11 @@ size_t fs_filesz(int fd) {
 }
 
 int fs_open(const char *pathname, int flags, int mode) {
-  for(int i = 0; i < NR_FILES; i++)
+  for(int i = 0; i < NR_FILES; i++){
+    Log("filename: %s",file_table[i].name);
     if(strcmp(file_table[i].name, pathname) == 0)
       return i;
+  }
   panic("The file indicated by pathname was not found.\n");
   return -1;
 }
