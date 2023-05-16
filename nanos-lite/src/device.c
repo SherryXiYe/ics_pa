@@ -13,7 +13,8 @@ size_t events_read(void *buf, size_t len) {
   int key = _read_key();
   bool down = false;
   if (key & 0x8000) {
-    key &= 0xfff;
+    // key &= 0xfff;
+    key^=0x8000;
     down = true;
   }
   char temp[50];
