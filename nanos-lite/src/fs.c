@@ -59,6 +59,7 @@ ssize_t fs_read(int fd, void *buf, size_t len) {
   ssize_t size = file_table[fd].size;
   if(file_table[fd].open_offset + len > size)
     len = size - file_table[fd].open_offset;
+  Log("fd value : %d",fd);
   switch(fd) {
     case FD_STDIN:
     case FD_STDOUT:
