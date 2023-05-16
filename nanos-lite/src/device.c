@@ -8,7 +8,6 @@ static const char *keyname[256] __attribute__((used)) = {
   _KEYS(NAME)
 };
 
-
 size_t events_read(void *buf, size_t len) {
   int key = _read_key();
   bool down = false;
@@ -19,7 +18,7 @@ size_t events_read(void *buf, size_t len) {
   }
   char temp[50];
   Log("in events_read");
-  if (key) 
+  if (key!=_KEY_NONE) 
     sprintf(temp, "%s %s\n", down ? "kd" : "ku", keyname[key]);
   else
     sprintf(temp, "t %d\n", (uint32_t)_uptime());
