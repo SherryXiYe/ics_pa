@@ -4,6 +4,7 @@ extern void ramdisk_read(void *buf, off_t offset, size_t len);
 extern void ramdisk_write(const void *buf, off_t offset, size_t len);
 extern void dispinfo_read(void *buf, off_t offset, size_t len);
 extern void fb_write(const void *buf, off_t offset, size_t len);
+extern size_t events_read(void *buf, size_t len);
 
 // 文件记录表
 typedef struct {
@@ -62,14 +63,17 @@ ssize_t fs_read(int fd, void *buf, size_t len) {
     case FD_STDIN:
     case FD_STDOUT:
     case FD_STDERR:
-    case FD_FB:
       Log("Invalid fd.\n");
+      return 0;
+    case FD_FB:
+      Log("fd==FD_FB.\n");
       return 0;
     case FD_DISPINFO:
       dispinfo_read(buf, file_table[fd].open_offset, len);
       file_table[fd].open_offset += len;
       return len;
-
+    case FD_EVENTS:
+      return events_read(buf, len);
     default:
       ramdisk_read(buf, file_table[fd].open_offset + file_table[fd].disk_offset, len);
       file_table[fd].open_offset += len;
@@ -89,8 +93,10 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
     case FD_STDIN:
     case FD_STDOUT:
     case FD_STDERR:
-    case FD_DISPINFO:
       Log("Invalid fd.\n");
+      return 0;
+    case FD_DISPINFO:
+      Log("fd==FD_DISPINFO.\n");
       return 0;
     case FD_FB:
       fb_write(buf, file_table[fd].open_offset, len);
