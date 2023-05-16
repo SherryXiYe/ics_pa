@@ -73,6 +73,7 @@ ssize_t fs_read(int fd, void *buf, size_t len) {
       file_table[fd].open_offset += len;
       return len;
     case FD_EVENTS:
+      Log("fd_events");
       return events_read(buf, len);
     default:
       ramdisk_read(buf, file_table[fd].open_offset + file_table[fd].disk_offset, len);

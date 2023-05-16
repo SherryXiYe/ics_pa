@@ -9,25 +9,25 @@ static const char *keyname[256] __attribute__((used)) = {
 };
 
 size_t events_read(void *buf, size_t len) {
-  
-  int key = _read_key();
-  bool down = false;
-  if (key & 0x8000) {
-    // key &= 0xfff;
+  char str[20];
+  bool down=false;
+  int key=_read_key();
+  if(key&0x8000){
     key^=0x8000;
-    down = true;
+    down=true;
   }
-  char temp[50];
-  Log("in events_read");
-  if (key!=_KEY_NONE) 
-    sprintf(temp, "%s %s\n", down ? "kd" : "ku", keyname[key]);
-  else
-    sprintf(temp, "t %d\n", (uint32_t)_uptime());
-  if(strlen(temp)<=len){
-    strncpy((char*)buf,temp,strlen(temp));
-    return strlen(temp);
+  if(key!=_KEY_NONE){
+    sprintf(str,"%s %s\n",down?"kd":"ku",keyname[key]);
   }
-  return strlen(buf);
+  else{
+    sprintf(str,"t %d\n",_uptime());
+  }
+  if(strlen(str)<=len){
+    strncpy((char*)buf,str,strlen(str));
+    return strlen(str);
+  }
+  Log("error:strlen(str)>len");
+  return 0;
 }
 
 static char dispinfo[128] __attribute__((used));
