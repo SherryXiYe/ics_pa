@@ -36,7 +36,7 @@ void init_fs() {
   int width=0,height=0;
   getScreen(&width,&height);
   file_table[FD_FB].size=width*height*sizeof(uint32_t);  //FD_FB是显存的文件描述符，每个像素4B
-  Log("FD_FB size=%d",file_table[FD_FB].size);
+  // Log("FD_FB size=%d",file_table[FD_FB].size);
 }
 
 // 返回文件描述符fd所描述的文件的大小
