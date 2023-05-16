@@ -17,11 +17,12 @@ size_t events_read(void *buf, size_t len) {
     down=true;
   }
   if(key!=_KEY_NONE){
+    Log("in");
     sprintf(str,"%s %s\n",down?"kd":"ku",keyname[key]);
-  }
-  else{
+  }else{
     sprintf(str,"t %d\n",_uptime());
   }
+  Log("len: %d; str: %s , %d",len,str,strlen(str));
   if(strlen(str)<=len){
     strncpy((char*)buf,str,strlen(str));
     return strlen(str);
