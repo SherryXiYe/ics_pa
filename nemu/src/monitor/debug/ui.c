@@ -105,6 +105,8 @@ static int cmd_info(char *args){
     for(int i=0;i<8;i++){
       printf("%s\t%08x\t%u\n",reg_name(i,4),reg_l(i),reg_l(i));
     }
+    //打印CR0和CR3寄存器
+    printf("CR0=0x%x, CR3=0x%x\n",cpu.cr0,cpu.cr3);
   }else if(strcmp(arg,"w") == 0){   // info w：打印监视点信息
     print_wp_info();
   }else{
