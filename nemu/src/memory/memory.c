@@ -81,9 +81,20 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
   // paddr_write(addr, len, data);
   if (PTE_ADDR(addr) != PTE_ADDR(addr + len - 1)){    // 跨页，先退出
-    assert(0);
+    // assert(0);
+    int len1=0x1000-OFF(addr);
+    int len2=len-len1;
+    paddr_t paddr1=page_translate(addr,false);
+    paddr_t paddr2=page_translate(addr+len1,false);
+
+    uint32_t low=data & (~0u >> ((4 - len1) << 3));
+    uint32_t high=data>>((4-len2)*8);
+
+    paddr_write(paddr1, len1, low);
+    paddr_write(paddr2, len2, high);
+  }else{
+    paddr_t paddr = page_translate(addr, true);
+    paddr_write(paddr, len, data);
   }
-  paddr_t paddr = page_translate(addr, true);
-  paddr_write(paddr, len, data);
 }
 
