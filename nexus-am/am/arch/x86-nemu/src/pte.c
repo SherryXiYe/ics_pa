@@ -66,6 +66,23 @@ void _switch(_Protect *p) {
 }
 
 void _map(_Protect *p, void *va, void *pa) {
+  if(OFF(va)||OFF(pa)){
+    // printf("Page not aligned");
+    // assert(0);
+    return;
+  }
+  PDE *pgdir=(PDE*)p->ptr;    //页目录表基址
+  PTE *pgtab=NULL;
+
+  PDE *pde=pgdir+PDX(va);
+  if((*pde&PTE_P)==0){      //页目录项有效位为0，即没有对应的页表，则申请新页
+    pgtab=(PTE*)palloc_f();
+    *pde=(uintptr_t)pgtab|PTE_P;  //填写页目录项，添加映射
+  }
+
+  pgtab=(PTE*)PTE_ADDR(*pde);
+  PTE *pte=pgtab+PTX(va);
+  *pte=(uintptr_t)pa|PTE_P;     //填写页表项，添加映射
 }
 
 void _unmap(_Protect *p, void *va) {

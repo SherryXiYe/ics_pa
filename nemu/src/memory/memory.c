@@ -66,12 +66,17 @@ paddr_t page_translate(vaddr_t addr, bool dirty) {
 uint32_t vaddr_read(vaddr_t addr, int len) {
   // return paddr_read(addr, len);
   uint32_t res = 0;
-  if (PTE_ADDR(addr) != PTE_ADDR(addr + len - 1)){    // 跨页，依次读取
-    for (int i = 0; i < len; i++) {
-      paddr_t paddr = page_translate(addr + i, false);
-      res |= paddr_read(paddr, 1) << (8 * i); 
-    }
-  }else{      // 不跨越，直接通过page_translate获取物理地址再读取
+  if (PTE_ADDR(addr) != PTE_ADDR(addr + len - 1)){    // 跨页，分别读取
+    int len1=0x1000-OFF(addr);  
+    int len2=len-len1;
+    paddr_t paddr1=page_translate(addr,true);
+    paddr_t paddr2=page_translate(addr+len1,true);
+    
+    uint32_t low=paddr_read(paddr1,len1);
+    uint32_t high=paddr_read(paddr2,len2);
+
+    res = high<<(8*len1)|low;
+  }else{      // 不跨页，直接通过page_translate获取物理地址再读取
     paddr_t paddr = page_translate(addr, false);
     res = paddr_read(paddr, len);
   }
