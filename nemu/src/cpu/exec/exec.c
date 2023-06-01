@@ -1,6 +1,8 @@
 #include "cpu/exec.h"
 #include "all-instr.h"
 
+extern void raise_intr(uint8_t NO, vaddr_t ret_addr);
+
 //每一个opcode对应相应指令的译码函数、执行函数、操作数宽度
 typedef struct {
   DHelper decode;
@@ -257,4 +259,12 @@ void exec_wrapper(bool print_flag) {
   void difftest_step(uint32_t);
   difftest_step(eip);
 #endif
+
+#define TIMER_IRQ 32    //时钟中断
+
+  if (cpu.INTR & cpu.IF) {
+    cpu.INTR = false;
+    raise_intr(TIMER_IRQ, cpu.eip);
+    update_eip();
+  }
 }

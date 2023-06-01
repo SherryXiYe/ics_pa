@@ -8,6 +8,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
 
   // TODO();
   rtl_push(&cpu.eflags);    //将eflags、cs、eip入栈
+  cpu.IF = 0;           //关中断
   rtl_push(&cpu.CS);
   rtl_push(&ret_addr);
 
@@ -23,4 +24,5 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
 }
 
 void dev_raise_intr() {
+  cpu.INTR=true;
 }

@@ -100,6 +100,7 @@ _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *cons
   memcpy((void*)ustack.end-16,(void*)arg1,4);
   //trapframe
   _RegSet tf;
+  // tf.eflags=0x02 | FL_IF;
   tf.eflags=0x02;
   tf.cs=8;
   tf.eip=(uintptr_t)entry;      //返回地址为entry
