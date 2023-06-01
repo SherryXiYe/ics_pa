@@ -23,7 +23,7 @@ size_t events_read(void *buf, size_t len) {
   if(key==_KEY_F12 && down){    //按下F12，切换游戏
     extern void switch_current_game();
     switch_current_game();
-    Log("switch current game");
+    Log("F12 down, switch current game");
   }
   return strlen(buf);
 }
