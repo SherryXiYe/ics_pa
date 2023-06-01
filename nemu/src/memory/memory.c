@@ -44,7 +44,7 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
 
 paddr_t page_translate(vaddr_t addr, bool dirty) {
   if(cpu.cr0.paging && cpu.cr0.protect_enable){   
-    printf("page translate: vaddr:0x%x\n",addr);
+    // printf("page translate: vaddr:0x%x\n",addr);
     PDE* pgdir = (PDE*)PTE_ADDR(cpu.cr3.val);   // 页目录表基址
     PDE pde;
     pde.val = paddr_read((paddr_t)(pgdir+PDX(addr)), 4);  //页目录项
