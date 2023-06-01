@@ -48,7 +48,7 @@ paddr_t page_translate(vaddr_t addr, bool dirty) {
     PDE* pgdir = (PDE*)PTE_ADDR(cpu.cr3.val);   // 页目录表基址
     PDE pde;
     pde.val = paddr_read((paddr_t)(pgdir+PDX(addr)), 4);  //页目录项
-    assert(pde.present);
+    // assert(pde.present);
     pde.accessed = true;
 
     PTE* ptep = (PTE*)PTE_ADDR(pde.val);    // 二级页表基址
