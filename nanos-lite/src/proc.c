@@ -27,7 +27,7 @@ void load_prog(const char *filename) {
 }
 
 static int count=0;
-static const int freq=1000;
+static const int freq=2;
 int current_game = 0;
 
 void switch_current_game(){
@@ -46,6 +46,7 @@ _RegSet* schedule(_RegSet *prev) {
   count++;
   if(count==freq){      //如果到达freq次，则切换成进程1
     current=&pcb[1];
+    Log("switch to hello");
     count=0;
   }else{
     current=&pcb[current_game];
