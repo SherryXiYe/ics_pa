@@ -19,6 +19,12 @@ size_t events_read(void *buf, size_t len) {
     sprintf(buf, "%s %s\n", down ? "kd" : "ku", keyname[key]);
   else
     sprintf(buf, "t %d\n", (uint32_t)_uptime());
+
+  if(key==_KEY_F12 && down){    //按下F12，切换游戏
+    extern void switch_current_game();
+    switch_current_game();
+    Log("switch current game");
+  }
   return strlen(buf);
 }
 

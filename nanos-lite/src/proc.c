@@ -28,13 +28,19 @@ void load_prog(const char *filename) {
 
 static int count=0;
 static const int freq=1000;
+int current_game = 0;
+
+void switch_current_game(){
+  current_game=(current_game==0?2:0);
+  Log("current_game=%d\n",current_game);
+}
 
 _RegSet* schedule(_RegSet *prev) {
   // return NULL;
   if(current!=NULL){      //current:当前进程的PCB指针
     current->tf=prev;     //保存tf
   }else{
-    current=&pcb[0];      //初始进程为0号进程
+    current=&pcb[current_game];      //初始进程为0号进程
   }
   // current=(current==&pcb[0]?&pcb[1]:&pcb[0]);
   count++;
@@ -42,7 +48,7 @@ _RegSet* schedule(_RegSet *prev) {
     current=&pcb[1];
     count=0;
   }else{
-    current=&pcb[0];
+    current=&pcb[current_game];
   }
   _switch(&current->as);    //切换虚拟地址空间
   return current->tf;
