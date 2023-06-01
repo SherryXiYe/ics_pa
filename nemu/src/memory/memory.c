@@ -48,13 +48,13 @@ paddr_t page_translate(vaddr_t addr, bool dirty) {
     PDE* pgdir = (PDE*)PTE_ADDR(cpu.cr3.val);   // 页目录表基址
     PDE pde;
     pde.val = paddr_read((paddr_t)(pgdir+PDX(addr)), 4);  //页目录项
-    // assert(pde.present);
+    assert(pde.present);
     pde.accessed = true;
 
     PTE* ptep = (PTE*)PTE_ADDR(pde.val);    // 二级页表基址
     PTE pte;
     pte.val = paddr_read((paddr_t)(ptep+PTX(addr)), 4);   //页表项
-    // assert(pte.present);
+    assert(pte.present);
     pte.accessed = true;
     pte.dirty = dirty;    // 设置dirty位
 
