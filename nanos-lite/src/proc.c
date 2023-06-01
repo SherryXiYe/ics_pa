@@ -46,7 +46,7 @@ _RegSet* schedule(_RegSet *prev) {
   count++;
   if(count==freq){      //如果到达freq次，则切换成进程1
     current=&pcb[1];
-    // Log("switch to hello");
+    Log("switch to hello");
     count=0;
   }else{
     current=&pcb[current_game];
