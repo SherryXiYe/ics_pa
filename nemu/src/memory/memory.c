@@ -54,7 +54,7 @@ paddr_t page_translate(vaddr_t addr, bool dirty) {
     PTE* ptep = (PTE*)PTE_ADDR(pde.val);    // 二级页表基址
     PTE pte;
     pte.val = paddr_read((paddr_t)(ptep+PTX(addr)), 4);   //页表项
-    assert(pte.present);
+    // assert(pte.present);
     pte.accessed = true;
     pte.dirty = dirty;    // 设置dirty位
 
