@@ -27,5 +27,11 @@ void load_prog(const char *filename) {
 }
 
 _RegSet* schedule(_RegSet *prev) {
-  return NULL;
+  // return NULL;
+  if(current!=NULL){      //current:当前进程的PCB指针
+    current->tf=prev;     //保存tf
+  }
+  current=&pcb[0];          //切换到第一个用户进程
+  _switch(&current->as);    //切换虚拟地址空间
+  return current->tf;
 }
