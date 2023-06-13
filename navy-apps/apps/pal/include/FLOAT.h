@@ -28,7 +28,6 @@ static inline FLOAT F_mul_int(FLOAT a, int b) {
 }
 
 static inline FLOAT F_div_int(FLOAT a, int b) {
-  assert(0);
   return a/b;
 }
 
