@@ -7,7 +7,25 @@ FLOAT F_mul_F(FLOAT a, FLOAT b) {
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
-  return (a/b)<<16;
+  // return (a/b)<<16;
+  assert(b != 0);
+  FLOAT m_a = Fabs(a);
+  FLOAT m_b = Fabs(b);
+  FLOAT res = m_a / m_b;
+  FLOAT remain = m_a % m_b;
+
+  for (int i = 0; i < 16; i++) {
+    remain = remain << 1;
+    res = res << 1;
+    if (remain >= m_b) {
+      remain -= m_b;
+      res++;
+    }
+  }
+  if (((a ^ b) & 0x80000000) == 0x80000000) {
+    res = -res;
+  }
+  return res;
 }
 
 union float_s {
