@@ -27,7 +27,7 @@ void load_prog(const char *filename) {
 }
 
 static int count=0;
-static const int freq=1000;
+static const int freq=1000000;
 static int current_game = 0;
 
 void switch_current_game(){
