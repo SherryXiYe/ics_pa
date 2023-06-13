@@ -3,14 +3,21 @@
 #include <assert.h>
 
 FLOAT F_mul_F(FLOAT a, FLOAT b) {
-  assert(0);
-  return 0;
+  return (a * b) >> 16;
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
-  assert(0);
-  return 0;
+  return (a/b)<<16;
 }
+
+union float_s {
+    struct {
+      uint32_t m : 23;
+      uint32_t e : 8;
+      uint32_t s : 1;
+    };
+    uint32_t value;
+};
 
 FLOAT f2F(float a) {
   /* You should figure out how to convert `a' into FLOAT without
@@ -21,15 +28,33 @@ FLOAT f2F(float a) {
    * Hint: The bit representation of `a' is already on the
    * stack. How do you retrieve it to another variable without
    * performing arithmetic operations on it directly?
+   * “a”的位表示形式已在堆栈上。如何在不直接对其执行算术运算的情况下将其检索到另一个变量？
    */
 
-  assert(0);
-  return 0;
+  // assert(0);
+  union float_s f;
+  f.value = *((uint32_t*)(void*)&a);
+  int real_e = f.e - 127;      //127为指数的偏移量！不能忘记减去
+  FLOAT res = 0;
+  if (real_e == 128)
+    assert(0);
+  int mov = 23- real_e - 16;
+  if (mov >= 0)
+    res = (f.m | (1 << 23)) >> mov;
+  else
+    res = (f.m | (1 << 23)) << (-mov);
+  if(f.s!=0){
+    res=-res;
+  }
+  return res;
 }
 
 FLOAT Fabs(FLOAT a) {
-  assert(0);
-  return 0;
+  if(isNeg(a)){
+    return -a;
+  }else{
+    return a;
+  }
 }
 
 /* Functions below are already implemented */
