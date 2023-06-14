@@ -66,5 +66,6 @@ make_EHelper(cwtl);
 make_EHelper(operand_size);
 make_EHelper(rol);
 
-
+make_EHelper(shrd);
+make_EHelper(shld);
 
