@@ -56,10 +56,11 @@ void set_open_offset(int fd,int n){
 int fs_open(const char *pathname, int flags, int mode) {
   for(int i = 0; i < NR_FILES; i++){
     // Log("filename: %s",file_table[i].name);
-    if(strcmp(file_table[i].name, pathname) == 0)
-      // file_table[i].open_offset=0;
+    if(strcmp(file_table[i].name, pathname) == 0){
+       file_table[i].open_offset=0;
       //set_open_offset(i,0);     //设置读写指针到文件开头
       return i;
+    }
   }
   panic("The file indicated by pathname was not found.\n");
   return -1;

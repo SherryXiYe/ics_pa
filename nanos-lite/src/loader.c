@@ -12,33 +12,19 @@ uintptr_t loader(_Protect *as, const char *filename) {
   // TODO();
   // size_t ramdisk_size = get_ramdisk_size();
   // ramdisk_read((void *)DEFAULT_ENTRY, 0, ramdisk_size);
-  // int fd = fs_open(filename, 0, 0);
-  // // fs_read(fd,DEFAULT_ENTRY,fs_filesz(fd));  //把整个filename文件读入DEFAULT_ENTRY处
-  // int size = fs_filesz(fd);
-  // void* va = DEFAULT_ENTRY;
-  // void* pa;
-  // while (size > 0) {
-  //   pa = new_page();      //申请物理页
-  //   _map(as, va, pa);
-  //   fs_read(fd, pa, PGSIZE);
-  //   va += PGSIZE;
-  //   size -= PGSIZE;
-  // }
-  // fs_close(fd);
-  // return (uintptr_t)DEFAULT_ENTRY;
-
-  Log("%s",filename);
-  int fd=fs_open(filename,0,0);
-  size_t size=fs_filesz(fd);
-//      fs_read(fd,DEFAULT_ENTRY,size);
- 	void *va,*pa;
-	va=DEFAULT_ENTRY;
-	for(;va<size+DEFAULT_ENTRY;va+=PGSIZE){
-	pa=new_page();
-    Log("%x:%x",(uint32_t)pa,(uint32_t)va);
-	_map(as,va,pa);
-	fs_read(fd,pa,PGSIZE);
-	}
-		
+  int fd = fs_open(filename, 0, 0);
+  // fs_read(fd,DEFAULT_ENTRY,fs_filesz(fd));  //把整个filename文件读入DEFAULT_ENTRY处
+  int size = fs_filesz(fd);
+  void* va = DEFAULT_ENTRY;
+  void* pa;
+  while (size > 0) {
+    pa = new_page();      //申请物理页
+    _map(as, va, pa);
+    fs_read(fd, pa, PGSIZE);
+    va += PGSIZE;
+    size -= PGSIZE;
+  }
+  fs_close(fd);
   return (uintptr_t)DEFAULT_ENTRY;
+
 }
